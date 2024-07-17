@@ -143,22 +143,6 @@ const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed,
           )}
         </View>
       )}
-
-      <View
-        style={{
-          position: 'absolute',
-          top: '90%',
-          transform: [
-            { translateY: yOffset },
-            { translateX: shift }
-          ],
-          zIndex: 200
-        }} 
-        className="absolute h-[100px] aspect-square bg-white border-thickViolet border-[2px] rounded-2xl z-50"
-      >
-
-      </View>
-
     </View>
 
   )

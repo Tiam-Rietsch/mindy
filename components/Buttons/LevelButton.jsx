@@ -8,7 +8,7 @@ const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed,
   const [yCoord, setYCoord] = useState(0)
 
   return (
-    <View className="relative items-center justify-center m-5"
+    <View className="relative items-center justify-center m-5 z-0"
       onLayout={(event) => {
         setYCoord(event.nativeEvent.layout.y)
       }}
@@ -55,7 +55,7 @@ const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed,
               translateY: yOffset,
             }
           ],
-
+          zIndex: 5
         }}
 
         className={active || passed ? (
@@ -66,7 +66,7 @@ const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed,
         onPressIn={() => setYOffset(10)}
         onPressOut={() => setYOffset(-10)}
       >
-        { active && (
+        {active && (
           <View className="absolute top-[-60px] bg-white p-5 animate-bounce tracking-wide z-10 rounded-2xl border-regularViolet border-[3px]">
             <Text className="text-2xl font-dBold text-thickViolet">START HERE</Text>
             <View className=" absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform translate-y-[40px] translate-x-[70px] border-t-white">
@@ -74,11 +74,21 @@ const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed,
             </View>
           </View>
         )}
-        <FontAwesome6
-          name="star"
-          size={active ? 90 : 70}
-          color={active || passed ? 'white' : '#777777'}
-        />
+        {passed ? (
+          <FontAwesome
+            name="star"
+            size={active ? 90 : 70}
+            color={active || passed ? 'white' : '#777777'}
+          />
+        ) : (
+          <FontAwesome6
+            name="star"
+            size={active ? 90 : 70}
+            color={active || passed ? 'white' : '#777777'}
+          />
+        )}
+
+
       </TouchableOpacity>
       {passed && (
         <View
@@ -133,6 +143,21 @@ const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed,
           )}
         </View>
       )}
+
+      <View
+        style={{
+          position: 'absolute',
+          top: '90%',
+          transform: [
+            { translateY: yOffset },
+            { translateX: shift }
+          ],
+          zIndex: 200
+        }} 
+        className="absolute h-[100px] aspect-square bg-white border-thickViolet border-[2px] rounded-2xl z-50"
+      >
+
+      </View>
 
     </View>
 

@@ -1,15 +1,18 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { Redirect } from 'expo-router'
+import { Redirect, router } from 'expo-router'
+import PrimaryButton from '../components/Buttons/PrimaryButton'
 
 
 const index = () => {
-
-  return <Redirect href="/study" />
-
   return (
     <View className="h-full w-full flex justify-center items-center font-dBold">
-      <Text className="font-dBold text-5xl">index</Text>
+      <PrimaryButton 
+        handlePress={() => router.push('/study')}
+        containerStyles={"w-[70%] border-black"}
+        textStyles={"text-black"}
+        text="START"
+      />
     </View>
   )
 }

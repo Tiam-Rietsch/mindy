@@ -1,14 +1,18 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { faBacteria } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faBrain } from '@fortawesome/free-solid-svg-icons'
 import SkillCard from '../../components/SkillCard'
 
 const study = () => {
   return (
-    <View className="justify-start items-center h-full p-10">
-      <SkillCard />
+    <View className="gap-5 justify-start items-center h-full p-10" style={{ gap: 20}}>
+      <SkillCard
+        title="communication verbale"
+        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis praesentium laboriosam mod"
+      />
+      <SkillCard
+        title="communication non verbale"
+        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis praesentium laboriosam modi"
+      />
     </View>
   )
 }

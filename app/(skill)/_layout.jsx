@@ -1,13 +1,17 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
+import LessonProvider from '../../context/LessonProvider'
 
 const SkillLayout = () => {
   return (
-    <Stack>
-      <Stack.Screen name="chaptersMap" options={{ headerShown: false}} />
-      <Stack.Screen name="lesson" options={{ headerShown: false}} />
-    </Stack>
+    <LessonProvider>
+      <Stack>
+        <Stack.Screen name="chaptersMap" options={{ headerShown: false}} />
+        <Stack.Screen name="lesson" options={{ headerShown: false}} />
+      </Stack>
+    </LessonProvider>
+
   )
 }
 

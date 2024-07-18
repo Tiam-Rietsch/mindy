@@ -1,19 +1,40 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
+import React, { useContext, useState } from 'react'
 import * as Progress from 'react-native-progress'
 import { FontAwesome6, FontAwesome } from '@expo/vector-icons'
+import PrimaryButton from './PrimaryButton'
+import { DetailContext, useDetailPopupContext } from '../../context/DetailPopupProvider'
+import { router } from 'expo-router'
 
-const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed, progress, rating, handleActive }) => {
+const LevelButton = ({ containerStyles, shift, lesson, current }) => {
+
+  const { active, passed, progress, rating } = lesson
   const [yOffset, setYOffset] = useState(0)
-  const [yCoord, setYCoord] = useState(0)
+  const [dimenssions, setDimensions] = useState({
+    height: 0,
+    width: 0
+  })
+  const {focusedDetailId, setFocusedDetailId} = useDetailPopupContext()
+  const canShowDetail = () => {
+    return focusedDetailId == lesson.lessonId
+  }
+
+  const showDetail = (event) => {
+    setFocusedDetailId(focusedDetailId == 0 ? lesson.lessonId : 0)
+  }
+
+  const startLesson = () => {
+    router.push('/lesson')
+  }
 
   return (
-    <View className="relative items-center justify-center m-5 z-0"
+    <View
+      className="relative items-center justify-center m-5 z-0 w-full h-fit"
       onLayout={(event) => {
-        setYCoord(event.nativeEvent.layout.y)
+        setDimensions({ ...dimenssions, height: event.nativeEvent.layout.height, width: event.nativeEvent.layout.width })
       }}
     >
-      {active && (
+      {current && (
         <Progress.Circle
           animated={true}
           endAngle={0}
@@ -22,7 +43,7 @@ const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed,
           progress={progress}
           thickness={15}
           borderWidth={0}
-          size={225}
+          size={220}
           color="#8A46EA"
           strokeCap='round'
           style={{
@@ -55,19 +76,19 @@ const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed,
               translateY: yOffset,
             }
           ],
-          zIndex: 5
         }}
 
-        className={active || passed ? (
+        className={current || passed ? (
           `aspect-square bg-thickViolet rounded-full border-[3px] border-b-[13px] border-regularViolet flex justify-center items-center active:border-b-[3px] active:border-[2px] active:translate-y-[15px] ${containerStyles}`
         ) : (
           `aspect-square bg-regularGray rounded-full border-[3px] border-b-[13px] border-thickGray flex justify-center items-center active:border-b-[3px] active:border-[2px] active:translate-y-[15px] ${containerStyles}`
         )}
         onPressIn={() => setYOffset(10)}
         onPressOut={() => setYOffset(-10)}
+        onPress={(event) => showDetail(event)}
       >
-        {active && (
-          <View className="absolute top-[-60px] bg-white p-5 animate-bounce tracking-wide z-10 rounded-2xl border-regularViolet border-[3px]">
+        {current && (
+          <View className="absolute w-[180px] top-[-60px] bg-white p-5 animate-bounce tracking-wide z-10 rounded-2xl border-regularViolet border-[3px]">
             <Text className="text-2xl font-dBold text-thickViolet">START HERE</Text>
             <View className=" absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform translate-y-[40px] translate-x-[70px] border-t-white">
 
@@ -75,72 +96,94 @@ const LevelButton = ({ text, containerStyles, textStyles, shift, active, passed,
           </View>
         )}
         {passed ? (
-          <FontAwesome
-            name="star"
-            size={active ? 90 : 70}
-            color={active || passed ? 'white' : '#777777'}
+          <FontAwesome6
+            name="check"
+            size={current ? 90 : 70}
+            color={current || passed ? 'white' : '#777777'}
           />
         ) : (
           <FontAwesome6
             name="star"
-            size={active ? 90 : 70}
-            color={active || passed ? 'white' : '#777777'}
+            size={current ? 90 : 70}
+            color={current || passed ? 'white' : '#777777'}
           />
         )}
 
+        {passed && (
+          <View
+            style={{
+              position: 'absolute',
+              bottom: -70,
+              transform: [
+                { translateY: yOffset },
+              ]
+            }}
+            className="w-full h-[80px] flex-row justify-center"
+          >
+            {rating < 1 ? (
+              <FontAwesome6
+                name="star"
+                size={50}
+                color={'#777777'}
+              />
+            ) : (
+              <FontAwesome
+                name="star"
+                size={50}
+                color={'#e9d30e'}
+              />
+            )}
+            {rating < 2 ? (
+              <FontAwesome6
+                name="star"
+                size={80}
+                color={'#777777'}
+              />
+            ) : (
+              <FontAwesome
+                name="star"
+                size={80}
+                color={'#e9d30e'}
+              />
+            )}
+            {rating < 3 ? (
+              <FontAwesome6
+                name="star"
+                size={50}
+                color={'#777777'}
+              />
+            ) : (
+              <FontAwesome
+                name="star"
+                size={50}
+                color={'#e9d30e'}
+              />
+            )}
+          </View>
+        )}
 
       </TouchableOpacity>
-      {passed && (
+
+      {canShowDetail() && (
         <View
           style={{
-            position: 'absolute',
-            bottom: -40,
+            // display: 'none',
+            position: 'relative',
             transform: [
-              { translateY: yOffset },
-              { translateX: shift }
+              { translateX: shift ?? 0 },
             ]
           }}
-          className="w-full h-[80px] flex-row justify-center"
+          className="z-50 w-[60%] h-[200px] bg-lightGray border-[2px] border-thickViolet p-5 flex-col items-center justify-between rounded-2xl"
         >
-          {rating < 1 ? (
-            <FontAwesome6
-              name="star"
-              size={50}
-              color={'#777777'}
-            />
-          ) : (
-            <FontAwesome
-              name="star"
-              size={50}
-              color={'#e9d30e'}
-            />
-          )}
-          {rating < 2 ? (
-            <FontAwesome6
-              name="star"
-              size={80}
-              color={'#777777'}
-            />
-          ) : (
-            <FontAwesome
-              name="star"
-              size={80}
-              color={'#e9d30e'}
-            />
-          )}
-          {rating < 3 ? (
-            <FontAwesome6
-              name="star"
-              size={50}
-              color={'#777777'}
-            />
-          ) : (
-            <FontAwesome
-              name="star"
-              size={50}
-              color={'#e9d30e'}
-            />
-          )}
+          <View className="absolute top-0 transform translate-y-[-60px] h-0 w-0 border-x-transparent border-t-transparent border-b-lightGray border-[30px]">
+
+          </View>
+          <Text className="font-dBold text-3xl text-thickViolet">ddddd</Text>
+          <Text className="font-dBold text-2xl text-thickViolet">lesson d of 5</Text>
+          <PrimaryButton
+            text="START"
+            handlePress={startLesson}
+          />
         </View>
       )}
     </View>

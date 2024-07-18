@@ -1,7 +1,10 @@
 import { View, Text, FlatList } from 'react-native'
-import React from 'react'
+import React, { createContext, useState } from 'react'
 import PrimaryButton from './Buttons/PrimaryButton'
 import LevelButton from './Buttons/LevelButton'
+import { useLessonContext } from '../context/LessonProvider'
+import DetailPopupProvider from '../context/DetailPopupProvider'
+
 
 const lessons = [
   {
@@ -54,7 +57,7 @@ const lessons = [
 
 const UnitHeader = ({ id, title }) => {
   return (
-    <View className="w-full h-[150px] bg-thickViolet rounded-xl mb-10 flex-row justify-between items-center overflow-hidden">
+    <View className="w-full h-[150px] bg-thickViolet mb-10 flex-row justify-between items-center overflow-hidden">
         <View className=" h-full w-[50%] justify-around items-start px-10 py-5">
           <Text className="text-white font-dBold text-4xl">Unit {id}</Text>
           <Text className="text-white font-dBold text-3xl">{title}</Text>
@@ -70,51 +73,47 @@ const UnitHeader = ({ id, title }) => {
   )
 }
 
-const ChapterContainer = ({ unit: { unitId, name, description, objective, currentUnit }}) => {
+const UnitContainer = ({ unit: { unitId, name, description, objective, currentUnit }}) => {
+
+  const { curLesson, setCurLesson } = useLessonContext()
+
   const shiftRatio = (index) => {
     let value = index % 6
     const step = 70
-    if (value == 0 || value == 3) {
-      return step * 0
-    }
-    if (value == 1) {
-      return step * -1
+
+    switch(value) {
+      case 0: return step * 0
+      case 1: return step * -1
+      case 2: return step * -2
+      case 3: return step * 0
+      case 4: return step * 1
+      case 5: return step * 2
     }
 
-    if (value == 2) {
-      return step * -2
-    }
 
-    if (value == 4) {
-      return step * 1
-    }
-
-    if (value == 5) {
-      return step * 2
-    }
   }
 
   return (
     <View className="w-full flex items-center">
-      <View className="w-[90%]">
+      <View className="w-full">
         <UnitHeader 
           id={unitId}
           title={name}
         />
         <View className="w-full items-center justify-start">
           <FlatList 
+            className="w-full"
             data={lessons}
             keyExtractor={(lesson) => lesson.lessonId}
             renderItem={({ item }) => (
-              <LevelButton 
-                containerStyles={`${item.active && currentUnit ? 'w-[180px]' : 'w-[150px]'} mb-10`}
-                text={item.lessonId}
-                shift={shiftRatio(item.lessonId - 1)}
-                active={item.active && currentUnit}
-                passed={item.passed}
-                progress={item.progress}
-                rating={item.rating}
-              />
+              <DetailPopupProvider>
+                <LevelButton 
+                  containerStyles={`${item.active && currentUnit ? 'w-[180px]' : 'w-[150px]'} mb-10`}
+                  shift={shiftRatio(item.lessonId - 1)}
+                  lesson={item}
+                  current={item.active && currentUnit}
+                />
+              </DetailPopupProvider>
             )}
           />
         </View>
@@ -123,4 +122,4 @@ const ChapterContainer = ({ unit: { unitId, name, description, objective, curren
   )
 }
 
-export default ChapterContainer
+export default UnitContainer

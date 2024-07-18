@@ -9,8 +9,8 @@ const index = () => {
     <View className="h-full w-full flex justify-center items-center font-dBold">
       <PrimaryButton 
         handlePress={() => router.push('/study')}
-        containerStyles={"w-[70%] border-black"}
-        textStyles={"text-black"}
+        containerStyles={`w-[80%] border-black `}
+        textStyles={`text-black  `}
         text="START"
       />
     </View>

@@ -1,5 +1,5 @@
-import handShake from '../assets/images/handShake.svg'
+// import handShake from '../assets/images/handShake.svg'
 
-export default {
-  handShake
-}
+// export default {
+//   handShake
+// }

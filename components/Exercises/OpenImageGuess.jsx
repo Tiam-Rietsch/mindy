@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import * as Progress from 'react-native-progress'
 import { FontAwesome } from '@expo/vector-icons'
-import HandShake from '../../assets/images/handShake.svg'
+// import HandShake from '../../assets/images/handShake.svg'
 
 const OpenImageGuess = () => {
   return (
@@ -32,7 +32,7 @@ const OpenImageGuess = () => {
         </View>
       </View>
       <View className="h-[45%] w-full bg-blue-500 items-center justify-center">
-        <HandShake />
+        {/* <HandShake /> */}
       </View>
       <View className="h-[35%] w-full bg-green-400"></View>
     </View>

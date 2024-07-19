@@ -15,7 +15,7 @@ const TabLayout = () => {
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: "#777777",
         tabBarStyle: {
-          height: 100
+          height: isTablet() ? 100 : 60
         },
         tabBarIconStyle: {
           width: 100,

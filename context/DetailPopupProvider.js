@@ -5,7 +5,7 @@ const DetailContext = createContext()
 export const useDetailPopupContext = () => useContext(DetailContext)
 
 export default DetailPopupProvider = ({ children }) => {
-  const [focusedDetailId, setFocusedDetailId] = useState(0)
+  const [focusedDetailId, setFocusedDetailId] = useState(-1)
 
   return (
     <DetailContext.Provider

@@ -4,7 +4,7 @@ import PrimaryButton from './Buttons/PrimaryButton'
 import { router } from 'expo-router'
 import { useDimensionContext } from '../context/DimensionProvider'
 
-const SkillCard = ({ title, description, handleContinue, SVG}) => {
+const SkillCard = ({ title, description, handleContinue, src}) => {
   const { isTablet } = useDimensionContext()
 
 
@@ -20,17 +20,25 @@ const SkillCard = ({ title, description, handleContinue, SVG}) => {
       <View className={`w-full h-[80%] flex flex-row justify-between items-start`}>
         <View className="w-[60%] justify-around h-full">
           <View className={`w-full h-fit flex-row`}>
-            <Text className={`${!isTablet() ? 'text-[18px]' : 'text-3xl'} font-dRegular text-white w-full`}>
+            <Text className={`${!isTablet() ? 'text-[15px] leading-5' : 'text-3xl'} font-dRegular text-white w-full`}>
               {description ?? 'no description'}
             </Text>
           </View>
           <View className={`h-[20%] w-full`}>
-            <PrimaryButton text="CONTINUE" handlePress={() => router.push('/chaptersMap')} />
+            <PrimaryButton
+              containerStyles={!isTablet() ? 'rounded-xl border-b-[6px] h-[50px]' : ''} 
+              textStyles={!isTablet() ? 'text-[20px]' : ''}
+              text="CONTINUE" 
+              handlePress={() => router.push('/chaptersMap')} />
           </View>
 
         </View>
         <View className="w-[30%] h-full">
-          <SVG />
+          <Image 
+            source={src}
+            className="h-full w-full"
+            resizeMode='contain'          
+          />
         </View>
       </View>
 

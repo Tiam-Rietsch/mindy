@@ -31,7 +31,7 @@ const RootLayout = () => {
         <Stack.Screen name="(skill)" options={{ headerShown: false }}/>
       </Stack>      
     </DimensionProvider>
-  )
+  ) 
 }
 
 export default RootLayout

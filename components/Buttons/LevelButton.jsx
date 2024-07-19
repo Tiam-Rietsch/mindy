@@ -19,10 +19,9 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
   const {focusedDetailId, setFocusedDetailId} = useDetailPopupContext()
 
   const canShowDetail = () => focusedDetailId == lesson.lessonId
-  const canShowStartHere = () => current && focusedDetailId == 0
 
   const showDetail = (event) => {
-    setFocusedDetailId(focusedDetailId == 0 ? lesson.lessonId : 0)
+    setFocusedDetailId(focusedDetailId == -1 ? lesson.lessonId : -1)
   }
 
   const startLesson = () => {
@@ -89,7 +88,7 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         onPressOut={() => setYOffset(-10)}
         onPress={(event) => showDetail(event)}
       >
-        {canShowStartHere() && (
+        {current && (
           <View className={`absolute ${isTablet() ? 'w-[180px]' : 'w-[120px]'} top-[-60px] bg-white p-5 animate-bounce tracking-wide z-10 rounded-2xl border-regularViolet border-[3px]`}>
             <Text className={`${isTablet() ? 'text-2xl' : ''} font-dBold text-thickViolet`}>START HERE</Text>
             <View className={`absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform ${isTablet() ? 'translate-x-[70px]' : 'translate-x-[45px]'} translate-y-[40px] border-t-white`}>

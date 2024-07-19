@@ -1,15 +1,19 @@
 import { SafeAreaView, ScrollView, Text } from 'react-native'
 import React from 'react'
 import SkillCard from '../../components/SkillCard'
-import HandShake from '../../assets/images/handShake.svg'
-import Hearing from '../../assets/images/Hearing.svg'
+import images from '../../constants/images'
+import TabHeader from '../../components/TabHeader'
+import { useDimensionContext } from '../../context/DimensionProvider'
 
 
 const study = () => {
+  const { isTablet } = useDimensionContext()
+
   return (
-    <SafeAreaView >
+    <SafeAreaView className="bg-lightGray">
+      <TabHeader />
       <ScrollView 
-        className="h-full p-10"
+        className={`h-full ${isTablet() ? 'p-10' : 'p-2'}`}
         contentContainerStyle={{
           justifyContent: 'start',
           alignItems: 'center',
@@ -19,12 +23,12 @@ const study = () => {
         <SkillCard
           title="communication verbale"
           description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis praesentium laboriosam mod"
-          SVG={() => <HandShake size={200}/>}
+          src={images.handShake}
         />
         <SkillCard
           title="communication non verbale"
           description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis praesentium laboriosam modi"
-          SVG={() => <Hearing height={'100%'} width={'100%'}/>}
+          src={images.Hearing}
         />
       </ScrollView>
     </SafeAreaView>

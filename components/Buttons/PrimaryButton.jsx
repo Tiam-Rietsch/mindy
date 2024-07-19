@@ -13,4 +13,4 @@ const PrimaryButton = ({ text, containerStyles, textStyles, handlePress }) => {
   )
 }
 
-export default PrimaryButton
+

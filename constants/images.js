@@ -1,5 +1,5 @@
-import handShake from '../assets/images/handShake.svg'
+import TestQuestion from '../assets/images/TestQuestion.png'
 
 export default {
-  handShake
+  TestQuestion
 }

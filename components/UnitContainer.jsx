@@ -4,6 +4,7 @@ import PrimaryButton from './Buttons/PrimaryButton'
 import LevelButton from './Buttons/LevelButton'
 import { useLessonContext } from '../context/LessonProvider'
 import DetailPopupProvider from '../context/DetailPopupProvider'
+import { useDimensionContext } from '../context/DimensionProvider'
 
 
 const lessons = [
@@ -56,16 +57,17 @@ const lessons = [
 
 
 const UnitHeader = ({ id, title }) => {
+  const { isTablet } = useDimensionContext()
   return (
-    <View className="w-full h-[150px] bg-thickViolet mb-10 flex-row justify-between items-center overflow-hidden">
-        <View className=" h-full w-[50%] justify-around items-start px-10 py-5">
-          <Text className="text-white font-dBold text-4xl">Unit {id}</Text>
-          <Text className="text-white font-dBold text-3xl">{title}</Text>
+    <View className={`w-full ${!isTablet() ? 'h-[120px]' : '' } bg-thickViolet mb-10 flex-row justify-between items-center overflow-hidden`}>
+        <View className={`h-full ${!isTablet() ?'w-[50%]' : ''} justify-around items-start px-10 py-5`}>
+          <Text className= {`text-white font-dBold ${!isTablet() ?'text-3xl' : 'text-4xl'}`}>Unit {id}</Text>
+          <Text className={`text-white font-dBold ${!isTablet() ?'text-[18px]' : 'text-4xl'}`}>{title}</Text>
         </View>
-        <View className="h-full w-[50%] justify-center items-center">
+        <View className={`h-full w-[50%] justify-center items-center`}>
           <PrimaryButton 
-            containerStyles={"w-[60%] h-[70px]"}
-            textStyles={"text-3xl"}
+            containerStyles={`${!isTablet() ? 'w-[80%] h-[50px] rounded-2xl' : ''}`}
+            textStyles={`${!isTablet() ? 'w-[60%]' : 'w-[70%] h-[60px]'}`}
             text={"DETAILS..."}
           />
         </View>
@@ -76,10 +78,11 @@ const UnitHeader = ({ id, title }) => {
 const UnitContainer = ({ unit: { unitId, name, description, objective, currentUnit }}) => {
 
   const { curLesson, setCurLesson } = useLessonContext()
+  const { isTablet } = useDimensionContext()
 
   const shiftRatio = (index) => {
     let value = index % 6
-    const step = 70
+    const step = isTablet() ? 70 : 50
 
     switch(value) {
       case 0: return step * 0
@@ -108,7 +111,7 @@ const UnitContainer = ({ unit: { unitId, name, description, objective, currentUn
             renderItem={({ item }) => (
               <DetailPopupProvider>
                 <LevelButton 
-                  containerStyles={`${item.active && currentUnit ? 'w-[180px]' : 'w-[150px]'} mb-10`}
+                  containerStyles={`${item.active && currentUnit ? (isTablet() ? 'w-[180px]' : 'w-[130px]') : (isTablet() ? 'w-[150px]' : 'w-[100px]')} mb-10`}
                   shift={shiftRatio(item.lessonId - 1)}
                   lesson={item}
                   current={item.active && currentUnit}

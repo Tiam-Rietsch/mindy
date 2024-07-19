@@ -5,9 +5,11 @@ import { FontAwesome6, FontAwesome } from '@expo/vector-icons'
 import PrimaryButton from './PrimaryButton'
 import { DetailContext, useDetailPopupContext } from '../../context/DetailPopupProvider'
 import { router } from 'expo-router'
+import { useDimensionContext } from '../../context/DimensionProvider'
 
 const LevelButton = ({ containerStyles, shift, lesson, current }) => {
 
+  const { isTablet } = useDimensionContext()
   const { active, passed, progress, rating } = lesson
   const [yOffset, setYOffset] = useState(0)
   const [dimenssions, setDimensions] = useState({
@@ -29,7 +31,7 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
 
   return (
     <View
-      className="relative items-center justify-center m-5 z-0 w-full h-fit"
+      className="relative items-center justify-center m-5 my-0 z-0 w-full h-fit"
       onLayout={(event) => {
         setDimensions({ ...dimenssions, height: event.nativeEvent.layout.height, width: event.nativeEvent.layout.width })
       }}
@@ -43,7 +45,7 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
           progress={progress}
           thickness={15}
           borderWidth={0}
-          size={220}
+          size={isTablet() ? 220 : 170}
           color="#8A46EA"
           strokeCap='round'
           style={{
@@ -88,9 +90,9 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         onPress={(event) => showDetail(event)}
       >
         {current && (
-          <View className="absolute w-[180px] top-[-60px] bg-white p-5 animate-bounce tracking-wide z-10 rounded-2xl border-regularViolet border-[3px]">
-            <Text className="text-2xl font-dBold text-thickViolet">START HERE</Text>
-            <View className=" absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform translate-y-[40px] translate-x-[70px] border-t-white">
+          <View className={`absolute ${isTablet() ? 'w-[150px]' : 'w-[120px]'} top-[-60px] bg-white p-5 animate-bounce tracking-wide z-10 rounded-2xl border-regularViolet border-[3px]`}>
+            <Text className={`${isTablet() ? 'text-2xl' : ''} font-dBold text-thickViolet`}>START HERE</Text>
+            <View className={`absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform ${isTablet() ? 'translate-x-[70px]' : 'translate-x-[45px]'} translate-y-[40px] border-t-white`}>
 
             </View>
           </View>
@@ -98,13 +100,13 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         {passed ? (
           <FontAwesome6
             name="check"
-            size={current ? 90 : 70}
+            size={isTablet() ? 70 : 50}
             color={current || passed ? 'white' : '#777777'}
           />
         ) : (
           <FontAwesome6
             name="star"
-            size={current ? 90 : 70}
+            size={current ? (isTablet() ? 90 : 70) : (isTablet() ? 70 : 50)}
             color={current || passed ? 'white' : '#777777'}
           />
         )}
@@ -123,39 +125,39 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
             {rating < 1 ? (
               <FontAwesome6
                 name="star"
-                size={50}
+                size={isTablet() ? 50 : 30}
                 color={'#777777'}
               />
             ) : (
               <FontAwesome
                 name="star"
-                size={50}
+                size={isTablet() ? 50 : 30}
                 color={'#e9d30e'}
               />
             )}
             {rating < 2 ? (
               <FontAwesome6
                 name="star"
-                size={80}
+                size={isTablet() ? 80 : 50}
                 color={'#777777'}
               />
             ) : (
               <FontAwesome
                 name="star"
-                size={80}
+                size={isTablet() ? 80 : 50}
                 color={'#e9d30e'}
               />
             )}
             {rating < 3 ? (
               <FontAwesome6
                 name="star"
-                size={50}
+                size={isTablet() ? 50 : 30}
                 color={'#777777'}
               />
             ) : (
               <FontAwesome
                 name="star"
-                size={50}
+                size={isTablet() ? 50 : 30}
                 color={'#e9d30e'}
               />
             )}

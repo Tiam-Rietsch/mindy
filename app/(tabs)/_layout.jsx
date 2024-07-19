@@ -4,8 +4,10 @@ import { Tabs } from 'expo-router'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faBrain } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesome5, FontAwesome6  } from '@expo/vector-icons'
+import { useDimensionContext } from '../../context/DimensionProvider'
 
 const TabLayout = () => {
+  const { isTablet } = useDimensionContext()
   return (
     <Tabs
       screenOptions={{
@@ -24,37 +26,37 @@ const TabLayout = () => {
       <Tabs.Screen 
         name="study"
         options={{
-          tabBarIcon: ({ color }) => <FontAwesome5 name="brain" size={50} color={color}/>
+          tabBarIcon: ({ color }) => <FontAwesome5 name="brain" size={ isTablet() ? 50 : 30 } color={color}/>
         }}
       />
       <Tabs.Screen 
         name="games"
         options={{
-          tabBarIcon: ({ color }) => <FontAwesome5 name="gamepad" size={50} color={color}/>
+          tabBarIcon: ({ color }) => <FontAwesome5 name="gamepad" size={isTablet() ? 50 : 30} color={color}/>
         }}
       />
       <Tabs.Screen 
         name="chat"
         options={{
-          tabBarIcon: ({ color }) => <FontAwesome6 name="message" size={50} color={color}/>
+          tabBarIcon: ({ color }) => <FontAwesome6 name="message" size={isTablet() ? 50 : 30} color={color}/>
         }}
       />
       <Tabs.Screen 
         name="calendar"
         options={{
-          tabBarIcon: ({ color }) => <FontAwesome6 name="calendar-days" size={50} color={color}/>
+          tabBarIcon: ({ color }) => <FontAwesome6 name="calendar-days" size={isTablet() ? 50 : 30} color={color}/>
         }}
       />
       <Tabs.Screen 
         name="stats"
         options={{
-          tabBarIcon: ({ color }) => <FontAwesome6 name="chart-line" size={50} color={color}/>
+          tabBarIcon: ({ color }) => <FontAwesome6 name="chart-line" size={isTablet() ? 50 : 30} color={color}/>
         }}
       />
       <Tabs.Screen 
         name="settings"
         options={{
-          tabBarIcon: ({ color }) => <FontAwesome5 name="cog" size={50} color={color}/>
+          tabBarIcon: ({ color }) => <FontAwesome5 name="cog" size={isTablet() ? 50 : 30} color={color}/>
         }}
       />
     </Tabs>

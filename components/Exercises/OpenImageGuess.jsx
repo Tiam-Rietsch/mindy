@@ -2,9 +2,9 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import * as Progress from 'react-native-progress'
 import { FontAwesome } from '@expo/vector-icons'
-import Clap from '../../assets/images/clap.svg' 
 import images from '../../constants/images'
 import Input from '../Input'
+import { router } from 'expo-router'
 
 const OpenImageGuess = () => {
   return (
@@ -13,6 +13,7 @@ const OpenImageGuess = () => {
         <View className="flex-1 bg-white justify-center items-center">
           <Text className="text-5xl font-dBold">Tittle of the exercise</Text>
           <TouchableOpacity 
+            onPress={() => router.back()}
             activeOpacity={1}
             className="h-[80px] w-[80px] bg-lightGray rounded-full absolute left-5 flex items-center justify-center"
           >

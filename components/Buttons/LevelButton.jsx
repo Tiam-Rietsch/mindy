@@ -31,7 +31,7 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
 
   return (
     <View
-      className="relative items-center justify-center m-5 my-0 z-0 w-full h-fit"
+      className={`relative items-center justify-center ml-5 ${isTablet() ? 'my-5' : 'my-0'} z-0 w-full h-fit`}
       onLayout={(event) => {
         setDimensions({ ...dimenssions, height: event.nativeEvent.layout.height, width: event.nativeEvent.layout.width })
       }}
@@ -90,7 +90,7 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         onPress={(event) => showDetail(event)}
       >
         {current && (
-          <View className={`absolute ${isTablet() ? 'w-[150px]' : 'w-[120px]'} top-[-60px] bg-white p-5 animate-bounce tracking-wide z-10 rounded-2xl border-regularViolet border-[3px]`}>
+          <View className={`absolute ${isTablet() ? 'w-[180px]' : 'w-[120px]'} top-[-60px] bg-white p-5 animate-bounce tracking-wide z-10 rounded-2xl border-regularViolet border-[3px]`}>
             <Text className={`${isTablet() ? 'text-2xl' : ''} font-dBold text-thickViolet`}>START HERE</Text>
             <View className={`absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform ${isTablet() ? 'translate-x-[70px]' : 'translate-x-[45px]'} translate-y-[40px] border-t-white`}>
 
@@ -175,7 +175,7 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
               { translateX: shift ?? 0 },
             ]
           }}
-          className="z-50 w-[60%] h-[200px] bg-lightGray border-[2px] border-thickViolet p-5 flex-col items-center justify-between rounded-2xl"
+          className={`z-50 ${isTablet() ? 'w-[60%]' : 'w-[80%]'} h-[200px] bg-lightGray border-[2px] border-thickViolet p-5 flex-col items-center justify-between rounded-2xl`}
         >
           <View className="absolute top-0 transform translate-y-[-60px] h-0 w-0 border-x-transparent border-t-transparent border-b-lightGray border-[30px]">
 

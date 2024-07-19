@@ -26,7 +26,8 @@ const TabLayout = () => {
       <Tabs.Screen 
         name="study"
         options={{
-          tabBarIcon: ({ color }) => <FontAwesome5 name="brain" size={ isTablet() ? 50 : 30 } color={color}/>
+          tabBarIcon: ({ color }) => <FontAwesome5 name="brain" size={ isTablet() ? 50 : 30 } color={color}/>,
+          headerShown: false
         }}
       />
       <Tabs.Screen 

@@ -81,8 +81,8 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         }}
 
         className={current || passed ? (
-          `aspect-square bg-thickViolet rounded-full ${isTablet() ? 'border-[3px]border-b-[13px]' : 'border-[1px] border-b-[10px]'} border-regularViolet flex justify-center items-center ${isTablet() ? 'active:border-[2px] active: border-b-[3px]' : 'active:border-[1px] active:border-b-[1px]'} active:translate-y-[15px] ${containerStyles}`
-        ) : (
+          `aspect-square bg-thickViolet rounded-full ${isTablet() ? 'border-[3px] border-b-[13px]' : 'border-[1px] border-b-[10px]'} border-regularViolet flex justify-center items-center ${isTablet() ? 'active:border-[2px] active:border-b-[3px]' : 'active:border-[1px] active:border-b-[1px]'} active:translate-y-[15px] ${containerStyles}`
+        ) : ( 
           `aspect-square bg-regularGray rounded-full border-[3px] border-b-[13px] border-thickGray flex justify-center items-center active:border-b-[3px] active:border-[2px] active:translate-y-[15px] ${containerStyles}`
         )}
         onPressIn={() => setYOffset(10)}

@@ -1,6 +1,7 @@
 import { View, Text, SafeAreaView, FlatList } from 'react-native'
 import React from 'react'
 import UnitContainer from '../../components/UnitContainer'
+import ReturnHeader from '../../components/ReturnHeader'
 
 const units = [
   {
@@ -29,6 +30,9 @@ const units = [
 const chaptersMap = () => {
   return (
     <SafeAreaView className="w-full h-full flex-col items-center">
+      <View className="w-full h-[10%]">
+        <ReturnHeader title={"COMMUNICATION VERBALE"}/>
+      </View>
       <FlatList 
         data={units}
         keyExtractor={(item) => item.unitId}
@@ -37,7 +41,7 @@ const chaptersMap = () => {
             unit={item}
           />
         )}
-        className="w-full h-full"
+        className="w-full h-[90%]"
       />
     </SafeAreaView>
   )

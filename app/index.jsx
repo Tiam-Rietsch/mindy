@@ -1,10 +1,11 @@
-import { View, Text } from 'react-native'
+import { View, Text, Dimensions } from 'react-native'
 import React from 'react'
 import { Redirect, router } from 'expo-router'
 import PrimaryButton from '../components/Buttons/PrimaryButton'
 
 
 const index = () => {
+  console.log(Dimensions.get('window').width)
   return (
     <View className="h-full w-full flex justify-center items-center font-dBold">
       <PrimaryButton 

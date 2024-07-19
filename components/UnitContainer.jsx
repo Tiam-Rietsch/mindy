@@ -60,14 +60,14 @@ const UnitHeader = ({ id, title }) => {
   const { isTablet } = useDimensionContext()
   return (
     <View className={`w-full ${!isTablet() ? 'h-[120px]' : 'h-[200px]' } bg-thickViolet mb-10 flex-row justify-between items-center overflow-hidden`}>
-        <View className={`h-full ${!isTablet() ?'w-[50%]' : ''} justify-around items-start px-10 py-5`}>
+        <View className={`h-full ${!isTablet() ?'w-[60%] px-5' : 'w-[50%] px-10'} justify-around items-start py-5`}>
           <Text className= {`text-white font-dBold ${!isTablet() ?'text-3xl' : 'text-4xl'}`}>Unit {id}</Text>
-          <Text className={`text-white font-dBold ${!isTablet() ?'text-[18px]' : 'text-4xl'}`}>{title}</Text>
+          <Text className={`text-white font-dBold ${!isTablet() ?'text-[18px] w-full' : 'text-4xl'}`}>{title}</Text>
         </View>
-        <View className={`h-full w-[50%] justify-center items-end pr-5`}>
+        <View className={`h-full flex-1 justify-center items-end pr-5`}>
           <PrimaryButton 
-            containerStyles={`${isTablet() ? 'w-[70%]' : 'w-[60%]'}`}
-            textStyles={``}
+            containerStyles={`${isTablet() ? 'w-[70%]' : 'w-[90%] h-[50px] rounded-xl'}`}
+            textStyles={`${isTablet() ? '' : 'text-[18px]'}`}
             text={"DETAILS..."}
           />
         </View>
@@ -111,7 +111,7 @@ const UnitContainer = ({ unit: { unitId, name, description, objective, currentUn
             renderItem={({ item }) => (
               <DetailPopupProvider>
                 <LevelButton 
-                  containerStyles={`${item.active && currentUnit ? (isTablet() ? 'w-[180px]' : 'w-[130px]') : (isTablet() ? 'w-[150px]' : 'w-[100px]')} mb-10`}
+                  containerStyles={`${item.active && currentUnit ? (isTablet() ? 'w-[180px]' : 'w-[120px]') : (isTablet() ? 'w-[150px]' : 'w-[90px]')} mb-10`}
                   shift={shiftRatio(item.lessonId - 1)}
                   lesson={item}
                   current={item.active && currentUnit}

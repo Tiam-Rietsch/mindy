@@ -2,7 +2,9 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import * as Progress from 'react-native-progress'
 import { FontAwesome } from '@expo/vector-icons'
-// import HandShake from '../../assets/images/handShake.svg'
+import Clap from '../../assets/images/clap.svg' 
+import images from '../../constants/images'
+import Input from '../Input'
 
 const OpenImageGuess = () => {
   return (
@@ -32,9 +34,18 @@ const OpenImageGuess = () => {
         </View>
       </View>
       <View className="h-[45%] w-full bg-blue-500 items-center justify-center">
-        {/* <HandShake /> */}
+        <Text className="text-4xl mb-3 font-dBold text-center">what are you seeing here ?</Text>
+        <Image 
+          className="h-[80%] w-[95%]"
+          source={images.TestQuestion}
+          resizeMode='contain'
+        />
       </View>
-      <View className="h-[35%] w-full bg-green-400"></View>
+      <View className="h-[35%] w-full bg-green-400">
+        <Input 
+        
+        />
+      </View>
     </View>
   )
 }

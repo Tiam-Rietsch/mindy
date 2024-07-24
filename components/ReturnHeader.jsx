@@ -2,17 +2,20 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import { useDimensionContext } from '../context/DimensionProvider'
 
 const ReturnHeader = ({ title }) => {
+  const { isTablet } = useDimensionContext()
+
   return (
-    <View className="flex-1 bg-white justify-center items-center">
-      <Text className="text-5xl font-dBold">{ title }</Text>
+    <View className={`flex-1 bg-white ${isTablet() ? 'justify-center' : 'justify-end pb-3'} items-center`}>
+      <Text className={`${isTablet() ? 'text-5xl' : 'text-xl'} font-dBold`}>{ title }</Text>
       <TouchableOpacity
         onPress={() => router.back()}
         activeOpacity={1}
-        className="h-[80px] w-[80px] bg-lightGray rounded-full absolute left-5 flex items-center justify-center"
+        className={` aspect-square bg-lightGray rounded-full absolute left-5 flex items-center justify-center ${isTablet() ? 'h-[80px]' : 'h-[40px] bottom-2'}`}
       >
-        <FontAwesome name="chevron-left" size={40} color="#4D0DA8" />
+        <FontAwesome name="chevron-left" size={isTablet() ? 40 : 20} color="#4D0DA8" />
       </TouchableOpacity>
     </View>
   )

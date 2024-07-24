@@ -1,10 +1,11 @@
-import { View, Text, FlatList } from 'react-native'
+import { View, Text, FlatList, Image } from 'react-native'
 import React, { createContext, useState } from 'react'
 import PrimaryButton from './Buttons/PrimaryButton'
 import LevelButton from './Buttons/LevelButton'
 import { useLessonContext } from '../context/LessonProvider'
 import DetailPopupProvider from '../context/DetailPopupProvider'
 import { useDimensionContext } from '../context/DimensionProvider'
+import getPet from '../constants/pet'
 
 
 const lessons = [
@@ -53,13 +54,22 @@ const lessons = [
     progress: 0,
     rating: 0,
   },
+  {
+    name: "this is the lesson namne",
+    description: "this is the lesson description",
+    lessonId: 6,
+    passed: false,
+    active: false,
+    progress: 0,
+    rating: 0,
+  },
 ]
 
 
 const UnitHeader = ({ id, title }) => {
   const { isTablet } = useDimensionContext()
   return (
-    <View className={`w-full ${!isTablet() ? 'h-[120px]' : 'h-[200px]' } bg-thickViolet mb-10 flex-row justify-between items-center overflow-hidden`}>
+    <View className={`w-full ${!isTablet() ? 'h-[120px] mb-2 mt-5' : 'h-[200px] mb-10' } bg-thickViolet  flex-row justify-between items-center overflow-hidden`}>
         <View className={`h-full ${!isTablet() ?'w-[60%] px-5' : 'w-[50%] px-10'} justify-around items-start py-5`}>
           <Text className= {`text-white font-dBold ${!isTablet() ?'text-3xl' : 'text-4xl'}`}>Unit {id}</Text>
           <Text className={`text-white font-dBold ${!isTablet() ?'text-[18px] w-full' : 'text-4xl'}`}>{title}</Text>
@@ -80,17 +90,18 @@ const UnitContainer = ({ unit: { unitId, name, description, objective, currentUn
   const { curLesson, setCurLesson } = useLessonContext()
   const { isTablet } = useDimensionContext()
 
-  const shiftRatio = (index) => {
+  const shiftRatio = (index, unitId) => {
+    let orientation = unitId % 2 == 0 ? 1 : -1
     let value = index % 6
-    const step = isTablet() ? 70 : 50
+    const step = isTablet() ? 100 *orientation : 38 *orientation
 
     switch(value) {
       case 0: return step * 0
       case 1: return step * -1
       case 2: return step * -2
-      case 3: return step * 0
-      case 4: return step * 1
-      case 5: return step * 2
+      case 3: return step * -2
+      case 4: return step * -1.15
+      case 5: return step * -0.5
     }
 
 
@@ -103,7 +114,14 @@ const UnitContainer = ({ unit: { unitId, name, description, objective, currentUn
           id={unitId}
           title={name}
         />
-        <View className="w-full items-center justify-start">
+        <View className="relative w-full items-center justify-start">
+          <View className={`${isTablet() ? 'h-[400px]' : 'h-[180px]'} aspect-square absolute top-[40%] ${unitId % 2 == 0 ? 'right-[5%]' :  'left-[5%]'}`}>
+            <Image 
+              source={getPet(unitId -1)}
+              className="h-full w-full"
+              resizeMode="contain"
+            />
+          </View>
           <FlatList 
             className="w-full"
             data={lessons}
@@ -111,8 +129,8 @@ const UnitContainer = ({ unit: { unitId, name, description, objective, currentUn
             renderItem={({ item }) => (
               <DetailPopupProvider>
                 <LevelButton 
-                  containerStyles={`${item.active && currentUnit ? (isTablet() ? 'w-[180px]' : 'w-[120px]') : (isTablet() ? 'w-[150px]' : 'w-[90px]')} mb-10`}
-                  shift={shiftRatio(item.lessonId - 1)}
+                  containerStyles={`${item.active && currentUnit ? (isTablet() ? 'w-[150px] my-[50px]' : 'w-[80px] my-5') : (isTablet() ? 'w-[150px] mb-10' : 'w-[70px] mb-2')}`}
+                  shift={shiftRatio(item.lessonId - 1, unitId)}
                   lesson={item}
                   current={item.active && currentUnit}
                 />

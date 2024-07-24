@@ -7,6 +7,7 @@ const SkillLayout = () => {
   return (
     <LessonProvider>
       <Stack>
+        <Stack.Screen name="congrats" options={{ headerShown: false }} />
         <Stack.Screen name="chaptersMap" options={{ headerShown: false}} />
         <Stack.Screen name="lesson" options={{ headerShown: false}} />
       </Stack>

@@ -30,7 +30,7 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
 
   return (
     <View
-      className={`relative items-center justify-center ml-5 ${isTablet() ? 'my-5' : 'my-0'} z-0 w-full h-fit`}
+      className={`relative items-center justify-center ml-5 my-0 z-0 w-full h-fit`}
       onLayout={(event) => {
         setDimensions({ ...dimenssions, height: event.nativeEvent.layout.height, width: event.nativeEvent.layout.width })
       }}
@@ -44,12 +44,12 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
           progress={progress}
           thickness={15}
           borderWidth={0}
-          size={isTablet() ? 220 : 160}
+          size={isTablet() ? 190 : 120}
           color="#8A46EA"
           strokeCap='round'
           style={{
             position: 'absolute',
-            top: 0,
+            top: isTablet() ? 50 : 20,
             transform: [
               {
                 translateX: shift - 1 ?? 0
@@ -89,9 +89,9 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         onPress={(event) => showDetail(event)}
       >
         {current && (
-          <View className={`absolute ${isTablet() ? 'w-[180px]' : 'w-[120px]'} top-[-60px] bg-white p-5 animate-bounce tracking-wide z-10 rounded-2xl border-regularViolet border-[3px]`}>
-            <Text className={`${isTablet() ? 'text-2xl' : ''} font-dBold text-thickViolet`}>START HERE</Text>
-            <View className={`absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform ${isTablet() ? 'translate-x-[70px]' : 'translate-x-[45px]'} translate-y-[40px] border-t-white`}>
+          <View className={`absolute ${isTablet() ? 'w-[180px] p-5 rounded-2xl top-[-60px]' : 'w-[100px] p-3 rounded-xl top-[-25px]'}  bg-white z-10 border-regularViolet border-[3px] items-center justify-center`}>
+            <Text className={`${isTablet() ? 'text-2xl' : 'text-[12px]'} font-dBold text-thickViolet`}>START HERE</Text>
+            <View className={`absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform ${isTablet() ? 'translate-x-[70px] translate-y-[40px]' : 'translate-x-[32px] translate-y-[20px]'}  border-t-white`}>
 
             </View>
           </View>
@@ -99,18 +99,18 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         {passed ? (
           <FontAwesome6
             name="check"
-            size={isTablet() ? 70 : 50}
+            size={isTablet() ? 70 : 30}
             color={current || passed ? 'white' : '#777777'}
           />
         ) : (
           <FontAwesome6
             name="star"
-            size={current ? (isTablet() ? 90 : 70) : (isTablet() ? 70 : 50)}
+            size={current ? (isTablet() ? 90 : 30) : (isTablet() ? 70 : 30)}
             color={current || passed ? 'white' : '#777777'}
           />
         )}
 
-        {passed && (
+        {/* {passed && (
           <View
             style={{
               position: 'absolute',
@@ -124,44 +124,44 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
             {rating < 1 ? (
               <FontAwesome6
                 name="star"
-                size={isTablet() ? 50 : 25}
+                size={isTablet() ? 40 : 25}
                 color={'#777777'}
               />
             ) : (
               <FontAwesome
                 name="star"
-                size={isTablet() ? 50 : 25}
+                size={isTablet() ? 40 : 25}
                 color={'#e9d30e'}
               />
             )}
             {rating < 2 ? (
               <FontAwesome6
                 name="star"
-                size={isTablet() ? 80 : 45}
+                size={isTablet() ? 70 : 45}
                 color={'#777777'}
               />
             ) : (
               <FontAwesome
                 name="star"
-                size={isTablet() ? 80 : 45}
+                size={isTablet() ? 70 : 45}
                 color={'#e9d30e'}
               />
             )}
             {rating < 3 ? (
               <FontAwesome6
                 name="star"
-                size={isTablet() ? 50 : 25}
+                size={isTablet() ? 40 : 25}
                 color={'#777777'}
               />
             ) : (
               <FontAwesome
                 name="star"
-                size={isTablet() ? 50 : 25}
+                size={isTablet() ? 40 : 25}
                 color={'#e9d30e'}
               />
             )}
           </View>
-        )}
+        )} */}
 
       </TouchableOpacity>
 
@@ -174,17 +174,16 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
               { translateX: shift ?? 0 },
             ]
           }}
-          className={`z-50 w-[60%] ${isTablet() ? 'h-[200px]' : 'h-[150px]'} bg-lightGray border-[2px] border-thickViolet p-5 flex-col items-center justify-between rounded-2xl z-50`}
+          className={`z-50  ${isTablet() ? 'w-[60%] h-[200px] p-5' : 'w-[50%] h-[120px] p-2'} bg-lightGray border-[2px] border-thickViolet flex-col items-center justify-between rounded-2xl z-50`}
         >
-          <View className="absolute top-0 transform translate-y-[-60px] h-0 w-0 border-x-transparent border-t-transparent border-b-lightGray border-[30px]">
-
+          <View className={`absolute top-0 transform ${isTablet() ? '-translate-y-[60px]' : '-translate-y-[20px]'} h-0 w-0 border-x-transparent border-t-transparent border-b-lightGray ${isTablet() ? 'border-[30px]' : 'border-[10px]'}`}>
           </View>
-          <Text className={`font-dBold ${isTablet() ? 'text-3xl' : 'text-[24px]'} text-thickViolet`}>ddddd</Text>
-          <Text className={`font-dBold ${isTablet() ? 'text-2xl' : 'text-[18px]'} text-thickViolet`}>lesson d of 5</Text>
+          <Text className={`font-dBold ${isTablet() ? 'text-3xl' : 'text-[20px]'} text-thickViolet`}>ddddd</Text>
+          <Text className={`font-dBold ${isTablet() ? 'text-2xl' : 'text-[16px]'} text-thickViolet`}>lesson d of 5</Text>
           <PrimaryButton
             text="START"
             handlePress={startLesson}
-            containerStyles={`${isTablet() ? '' : 'h-[40px] rounded-xl'}`}
+            containerStyles={`${isTablet() ? '' : 'h-[40px] rounded-xl border-b-[5px]'}`}
             textStyles={`${isTablet() ? '' : 'text-[18px]'}`}
           />
         </View>

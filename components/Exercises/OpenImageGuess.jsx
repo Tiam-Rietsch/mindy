@@ -34,10 +34,10 @@ const OpenImageGuess = () => {
           <FontAwesome name="heart" size={isTablet() ? 60 : 30} color={"red"} />
         </View>
       </View>
-      <View className={`${isTablet() ? 'h-[45%]' : 'h-[35%]'} w-full items-center justify-center`}>
+      <View className={`${isTablet() ? 'h-[45%] bg-red-200' : 'h-[35%]'} w-full items-center justify-center`}>
         <Text className={`${isTablet() ? 'text-4xl' : 'text-2xl'} mb-3 font-dBold text-center`}>what are you seeing here ?</Text>
         <Image
-          className={`w-[95%]`}
+          className={`w-[95%] h-[80%]`}
           source={images.TestQuestion}
           resizeMode='contain'
         />
@@ -76,7 +76,10 @@ const OpenImageGuess = () => {
               containerStyles={`w-[70%] ${!isTablet() ? 'h-[50px] rounded-2xl' : ''} border-green-600`}
               textStyles={`text-green-600 ${!isTablet() ? 'text-xl' : ''}`}
               text={"CONTINUE"}
-              handlePress={() => setShowResult(!showResult)}
+              handlePress={() => {
+                setShowResult(!showResult)
+                router.push('/congrats')
+              }}
 
             />
           </View>
@@ -103,7 +106,10 @@ const OpenImageGuess = () => {
               containerStyles={`w-[70%] ${!isTablet() ? 'h-[50px] rounded-2xl' : ''} border-red-600`}
               textStyles={`text-red-600 ${!isTablet() ? 'text-xl' : ''}`}
               text={"COMPRIS"}
-              handlePress={() => setShowResult(!showResult)}
+              handlePress={() => {
+                setShowResult(!showResult)
+                router.push('/congrats')
+              }}
             />
           </View>
         )}

@@ -3,6 +3,7 @@ import React from "react";
 import FormField from "../../components/FormField";
 import PrimaryButton from "../../components/Buttons/PrimaryButton";
 import { Fontisto } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 const profile = () => {
   return (
@@ -12,6 +13,7 @@ const profile = () => {
           containerStyles={`w-[130px]  h-[45px]  rounded-2xl border-regularGray`}
           text="connexion"
           textStyles={`text-red text-[17px]`}
+          handlePress={() => router.push('/login')}
         />
       </View>
       <Text className="text-xl font-dBold text-thickGray  p-10">

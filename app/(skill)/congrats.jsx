@@ -5,6 +5,7 @@ import BonusCard from '../../components/BonusCard'
 import { FontAwesome, Feather } from '@expo/vector-icons'
 import PrimaryButton from '../../components/Buttons/PrimaryButton'
 import { useDimensionContext } from '../../context/DimensionProvider'
+import { router } from 'expo-router'
 
 const congrats = () => {
   const { isTablet } = useDimensionContext()
@@ -42,6 +43,7 @@ const congrats = () => {
           containerStyles={`border-regulartViolet rounded-2xl bg-thickViolet ${isTablet() ? 'w-[300px]' : 'w-[170px]'}`}
           text="NEXT MODULE"
           textStyles={`text-white ${isTablet() ? 'text-3xl' : 'text-[14px]'}`}
+          handlePress={() => router.replace('/chaptersMap')}
         />
       </View>
     </SafeAreaView>

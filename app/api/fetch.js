@@ -1,131 +1,134 @@
-import * as SecureStore from 'expo-secure-store'
+import * as SecureStore from "expo-secure-store";
+import {
+  allChaptersEndpoint,
+  allSkillsEndpoint,
+  createLessonEndpoint,
+  loginEndpoint,
+  updateCurrentChapterEndpoint,
+  validateChapterEndpoint,
+} from "./endpoints";
+import { getTextOfJSDocComment } from "typescript";
 
-const { loginEndpoint, createLessonEndpoint, createScenarioEndpoint, correctionEndpoint, getImageEndpoint } = require("./endpoints")
-
-
-const authHeader = new Headers()
-authHeader.append("Content-Type", "application/json")
-
-export const loginUser = async (email, password) => {
+/**
+ *
+ * @param {the email of the user} email
+ * @param {the password of the user} password
+ * @returns a token
+ */
+export const signin = async (email, password) => {
   try {
     let response = await fetch(loginEndpoint, {
       method: "POST",
-      headers: authHeader,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        email: email,
-        motDePasse: password
-      })
-    })
+        mail: email,
+        password: password,
+      }),
+    });
+    if (!response) throw Error("The response did not work");
 
-    if (!response.ok) throw Error("erreur")
-    let data = await response.json()
-
-    return data.jwt
-
-  } catch(error) {
-    console.log(error)
+    let data = await response.json();
+    return data["jwt"];
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
-export const getToken = async () => {
-  return await SecureStore.getItemAsync('authToken')
-}
+export const getAuthToken = async () => {
+  return await SecureStore.getItemAsync("authToken");
+};
 
-export const getLessons = async (chapter) => {
+export const getCompetences = async () => {
   try {
+    let token = await getAuthToken();
 
-    const token = await SecureStore.getItemAsync('authToken')
-    if (!token) throw Error("token was not found")
-  
-    const headers = new Headers()
-    headers.append('Content-Type', 'application/json')
-    headers.append('Authorization', `${token}`)
+    if (!token)
+      throw Error("the user token could not be found (getCompetences)");
+
+    let response = await fetch(allSkillsEndpoint, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getChapters = async (id) => {
+  try {
+    let token = await getAuthToken();
+    if (!token) throw Error("the token could not be found (getChapters)");
+
+    let response = await fetch(allChaptersEndpoint(id), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+
+    let data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const validateChapter = async (id) => {
+  try {
+    let token = await getAuthToken();
+    let response = await fetch(validateChapterEndpoint(id), {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+
+    if (response.status == 3002) return true;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const setCurrentChapter = async (id) => {
+  try {
+    let token = await getAuthToken();
+    let response = await fetch(updateCurrentChapterEndpoint(id), {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+    if (response.status === 3003) return true;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getLoessons = async (chapterId) => {
+  console.log(chapterId)
+  try {
+    let token = await getAuthToken()
     let response = await fetch(createLessonEndpoint, {
       method: "POST",
-      headers: headers,
-      body: JSON.stringify(chapter)
-    })
-    
-    let data = await response.json()
-    
-    return data
-
-  } catch(error) {
-    console.log(error)
-  }
-}
-
-export const getScenarioExercise = async (lesson) => {
-  try {
-    const token = await getToken()
-    if (!token) throw Error("token not found")
-
-    const headers = new Headers()
-    headers.append('Content-Type', 'application/json')
-    headers.append('Authorization', `${token}`)
-
-    console.log("id", lesson.id)
-
-    let response = await fetch(createScenarioEndpoint(lesson.id), {
-      method: "GET",
-      headers: headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      },
+      body: JSON.stringify(chapterId)
     })
 
     let data = await response.json()
-
-    return data
-
-  } catch(error) {
-    console.log(error)
-  }
-}
-
-export const getCorrection = async (gameId, userResponse) => {
-  try {
-    const token = await getToken()
-    if (!token) throw Error("token not found")
-
-    const headers = new Headers()
-    headers.append('Content-Type', 'application/json')
-    headers.append('Authorization', `${token}`)
-
-    let response = await fetch(correctionEndpoint(gameId), {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(userResponse)
-    })
-
-    let data = await response.json()
-
-    console.log("reponse", data.response)
-
     return data
   } catch(error) {
-    console.log(error)
-  }
-}
-
-export const fetchImage = async (path) => {
-  console.log("image path", path)
-  const token = await getToken()
-  if (!token) throw Error("token not found")
-
-  const headers = new Headers()
-  headers.append('Content-Type', 'application/json')
-  headers.append('Authorization', `${token}`)
-
-  try {
-    let response = await fetch(getImageEndpoint, {
-      method: "POST",
-      headers: headers,
-      body: path
-    })
-
-    const data = await response.blob()
-
-    return data
-
-  } catch(error) {
-    console.log(error)
+    console.error(error)
   }
 }

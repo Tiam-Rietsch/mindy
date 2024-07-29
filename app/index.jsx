@@ -2,10 +2,17 @@ import { View, Text, Dimensions } from 'react-native'
 import React from 'react'
 import { Redirect, router } from 'expo-router'
 import PrimaryButton from '../components/Buttons/PrimaryButton'
+import { useGlobalContext } from '../context/GlobalProvider'
 
 
 const index = () => {
-  console.log(Dimensions.get('window').width)
+  
+  const { isLoggedIn } = useGlobalContext()
+
+  if (isLoggedIn) {
+    return <Redirect href="/study" />
+  }
+
   return (
     <View className="h-full w-full flex justify-center items-center font-dBold">
       <PrimaryButton 

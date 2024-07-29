@@ -1,4 +1,4 @@
-const baseAddress = "http://192.168.8.103:8080"
+const baseAddress = "http://192.168.124.48:8080"
 
 // authentication endpoing
 const authEnpoint = baseAddress + "/mindyback/v1/auth"
@@ -26,10 +26,7 @@ export const loginEndpoint = authEnpoint + "/signin"
 const lessonsEndpoint = othersBase + "/lecons"
 
 /**
- * body: Chapter {
- *   nom,
- *   description,
- *   objSpec
+ * body: chapter_id
  * } ==> [{
  *   id,
  *   nom,
@@ -37,7 +34,7 @@ const lessonsEndpoint = othersBase + "/lecons"
  *   objSpec
  * }]
  */
-export const createLessonEndpoint = lessonsEndpoint + "/create"
+export const createLessonEndpoint = lessonsEndpoint + "/createLecons"
 export const findLessonEndpoint = (id) => lessonsEndpoint + `/findById/${id}`
 
 
@@ -98,3 +95,29 @@ const ImageEndpoint = othersBase + "/images"
  * }
  */
 export const getImageEndpoint = ImageEndpoint + "/find"
+
+
+// =================================== skills
+
+const skillsEndpoint = othersBase + "/competences"
+
+/**
+ * header: Authorization
+ */
+export const allSkillsEndpoint = skillsEndpoint + "/findAllByUserId"
+
+
+// ================================== chapters
+const chaptersEndpoint = othersBase + "/chapters"
+
+/**
+ * header: Authorizatoin
+ * path: id
+ */
+export const allChaptersEndpoint = (id) => chaptersEndpoint + `/findAllCompetence/${id}`
+
+export const validateChapterEndpoint = (id) => chaptersEndpoint + `/validateChapter/${id}`
+
+export const updateCurrentChapterEndpoint = () => chaptersEndpoint + `/updateChapterCurrent/${id}`
+
+

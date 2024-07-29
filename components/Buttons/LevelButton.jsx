@@ -5,11 +5,11 @@ import { FontAwesome6, FontAwesome } from '@expo/vector-icons'
 import PrimaryButton from './PrimaryButton'
 import { DetailContext, useDetailPopupContext } from '../../context/DetailPopupProvider'
 import { router } from 'expo-router'
-import { useDimensionContext } from '../../context/DimensionProvider'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 const LevelButton = ({ containerStyles, shift, lesson, current }) => {
 
-  const { isTablet } = useDimensionContext()
+  const { isTablet } = useGlobalContext()
   const { active, passed, progress, rating } = lesson
   const [yOffset, setYOffset] = useState(0)
   const [dimenssions, setDimensions] = useState({
@@ -44,12 +44,12 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
           progress={progress}
           thickness={15}
           borderWidth={0}
-          size={isTablet() ? 190 : 120}
+          size={isTablet ? 190 : 120}
           color="#8A46EA"
           strokeCap='round'
           style={{
             position: 'absolute',
-            top: isTablet() ? 50 : 20,
+            top: isTablet ? 50 : 20,
             transform: [
               {
                 translateX: shift - 1 ?? 0
@@ -80,7 +80,7 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         }}
 
         className={current || passed ? (
-          `aspect-square bg-thickViolet rounded-full ${isTablet() ? 'border-[3px] border-b-[13px]' : 'border-[1px] border-b-[10px]'} border-regularViolet flex justify-center items-center ${isTablet() ? 'active:border-[2px] active:border-b-[3px]' : 'active:border-[1px] active:border-b-[1px]'} active:translate-y-[15px] ${containerStyles}`
+          `aspect-square bg-thickViolet rounded-full ${isTablet ? 'border-[3px] border-b-[13px]' : 'border-[1px] border-b-[10px]'} border-regularViolet flex justify-center items-center ${isTablet ? 'active:border-[2px] active:border-b-[3px]' : 'active:border-[1px] active:border-b-[1px]'} active:translate-y-[15px] ${containerStyles}`
         ) : ( 
           `aspect-square bg-regularGray rounded-full border-[3px] border-b-[13px] border-thickGray flex justify-center items-center active:border-b-[3px] active:border-[2px] active:translate-y-[15px] ${containerStyles}`
         )}
@@ -89,9 +89,9 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         onPress={(event) => showDetail(event)}
       >
         {current && (
-          <View className={`absolute ${isTablet() ? 'w-[180px] p-5 rounded-2xl top-[-60px]' : 'w-[100px] p-3 rounded-xl top-[-25px]'}  bg-white z-10 border-regularViolet border-[3px] items-center justify-center`}>
-            <Text className={`${isTablet() ? 'text-2xl' : 'text-[12px]'} font-dBold text-thickViolet`}>START HERE</Text>
-            <View className={`absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform ${isTablet() ? 'translate-x-[70px] translate-y-[40px]' : 'translate-x-[32px] translate-y-[20px]'}  border-t-white`}>
+          <View className={`absolute ${isTablet ? 'w-[180px] p-5 rounded-2xl top-[-60px]' : 'w-[100px] p-3 rounded-xl top-[-25px]'}  bg-white z-10 border-regularViolet border-[3px] items-center justify-center`}>
+            <Text className={`${isTablet ? 'text-2xl' : 'text-[12px]'} font-dBold text-thickViolet`}>START HERE</Text>
+            <View className={`absolute top-full left-0  border-x-transparent border-t-[15px] border-x-[15px] w-0 h-0 transform ${isTablet ? 'translate-x-[70px] translate-y-[40px]' : 'translate-x-[32px] translate-y-[20px]'}  border-t-white`}>
 
             </View>
           </View>
@@ -99,13 +99,13 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         {passed ? (
           <FontAwesome6
             name="check"
-            size={isTablet() ? 70 : 30}
+            size={isTablet ? 70 : 30}
             color={current || passed ? 'white' : '#777777'}
           />
         ) : (
           <FontAwesome6
             name="star"
-            size={current ? (isTablet() ? 90 : 30) : (isTablet() ? 70 : 30)}
+            size={current ? (isTablet ? 90 : 30) : (isTablet ? 70 : 30)}
             color={current || passed ? 'white' : '#777777'}
           />
         )}
@@ -116,7 +116,7 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
               position: 'absolute',
               bottom: -70,
               transform: [
-                { translateY: isTablet() ? yOffset : yOffset + 10 },
+                { translateY: isTablet ? yOffset : yOffset + 10 },
               ]
             }}
             className="w-full h-[80px] flex-row justify-center"
@@ -124,39 +124,39 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
             {rating < 1 ? (
               <FontAwesome6
                 name="star"
-                size={isTablet() ? 40 : 25}
+                size={isTablet ? 40 : 25}
                 color={'#777777'}
               />
             ) : (
               <FontAwesome
                 name="star"
-                size={isTablet() ? 40 : 25}
+                size={isTablet ? 40 : 25}
                 color={'#e9d30e'}
               />
             )}
             {rating < 2 ? (
               <FontAwesome6
                 name="star"
-                size={isTablet() ? 70 : 45}
+                size={isTablet ? 70 : 45}
                 color={'#777777'}
               />
             ) : (
               <FontAwesome
                 name="star"
-                size={isTablet() ? 70 : 45}
+                size={isTablet ? 70 : 45}
                 color={'#e9d30e'}
               />
             )}
             {rating < 3 ? (
               <FontAwesome6
                 name="star"
-                size={isTablet() ? 40 : 25}
+                size={isTablet ? 40 : 25}
                 color={'#777777'}
               />
             ) : (
               <FontAwesome
                 name="star"
-                size={isTablet() ? 40 : 25}
+                size={isTablet ? 40 : 25}
                 color={'#e9d30e'}
               />
             )}
@@ -174,17 +174,17 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
               { translateX: shift ?? 0 },
             ]
           }}
-          className={`z-50  ${isTablet() ? 'w-[60%] h-[200px] p-5' : 'w-[50%] h-[120px] p-2'} bg-lightGray border-[2px] border-thickViolet flex-col items-center justify-between rounded-2xl z-50`}
+          className={`z-50  ${isTablet ? 'w-[60%] h-[200px] p-5' : 'w-[50%] h-[120px] p-2'} bg-lightGray border-[2px] border-thickViolet flex-col items-center justify-between rounded-2xl z-50`}
         >
-          <View className={`absolute top-0 transform ${isTablet() ? '-translate-y-[60px]' : '-translate-y-[20px]'} h-0 w-0 border-x-transparent border-t-transparent border-b-lightGray ${isTablet() ? 'border-[30px]' : 'border-[10px]'}`}>
+          <View className={`absolute top-0 transform ${isTablet ? '-translate-y-[60px]' : '-translate-y-[20px]'} h-0 w-0 border-x-transparent border-t-transparent border-b-lightGray ${isTablet ? 'border-[30px]' : 'border-[10px]'}`}>
           </View>
-          <Text className={`font-dBold ${isTablet() ? 'text-3xl' : 'text-[20px]'} text-thickViolet`}>ddddd</Text>
-          <Text className={`font-dBold ${isTablet() ? 'text-2xl' : 'text-[16px]'} text-thickViolet`}>lesson d of 5</Text>
+          <Text className={`font-dBold ${isTablet ? 'text-3xl' : 'text-[20px]'} text-thickViolet`}>ddddd</Text>
+          <Text className={`font-dBold ${isTablet ? 'text-2xl' : 'text-[16px]'} text-thickViolet`}>lesson d of 5</Text>
           <PrimaryButton
             text="START"
             handlePress={startLesson}
-            containerStyles={`${isTablet() ? '' : 'h-[40px] rounded-xl border-b-[5px]'}`}
-            textStyles={`${isTablet() ? '' : 'text-[18px]'}`}
+            containerStyles={`${isTablet ? '' : 'h-[40px] rounded-xl border-b-[5px]'}`}
+            textStyles={`${isTablet ? '' : 'text-[18px]'}`}
           />
         </View>
       )}

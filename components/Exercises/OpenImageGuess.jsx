@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, Image , SafeAreaView} from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, TouchableOpacity, Image, SafeAreaView, ActivityIndicator } from 'react-native'
+import React, { useState, useEffect, useCallback } from 'react'
 import * as Progress from 'react-native-progress'
 import { FontAwesome, FontAwesome5, FontAwesome6 } from '@expo/vector-icons'
 import images from '../../constants/images'
@@ -8,18 +8,84 @@ import { router } from 'expo-router'
 import PrimaryButton from '../Buttons/PrimaryButton'
 import ReturnHeader from '../ReturnHeader'
 import { useGlobalContext } from '../../context/GlobalProvider'
+import { fetchImage, getCorrection } from '../../app/api/fetch'
 
-const OpenImageGuess = () => {
+const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
 
   const [answer, setAnswer] = useState('')
   const [questionPassed, setQuestionPassed] = useState(true)
+  const [correction, setCorrection] = useState({
+    analysis: "",
+    response: "",
+    correct: false
+  })
+  const [isCorrecting, setIsCorrecting] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const { isTablet } = useGlobalContext()
+  const [imageUri, setImageUri] = useState(null)
+  const [imageLoading, setImageLoading] = useState(false)
+
+
+  const handleAnswerChange = (text) => {
+    setAnswer(text)
+  }
+
+  const correctAnswer =  async () => {
+    try {
+      setIsCorrecting(true)
+      console.log(exercise.id)
+      let loadedCorrection = await getCorrection(exercise.id, answer)
+      if (!loadedCorrection) throw Error("The corrections could not be loaded")
+
+      setCorrection({...correction, analysis: loadedCorrection.analysis, response: loadedCorrection.response, correct: loadedCorrection.isCorrect})        
+
+      if (correction.correct) {
+        setQuestionPassed(true)
+      } else {
+        setQuestionPassed(false)
+      }
+    } catch(error) {
+      console.error(error)
+    } finally {
+      setIsCorrecting(false)
+    }
+  }
+
+  const handleSubmit = useCallback(() => {
+    correctAnswer()
+    setShowResult(true)
+  })
+
+  const setImage = async () => {
+    try {
+      setImageLoading(true)
+      const blob = await fetchImage(exercise.scenarioScene.pathToScene)
+
+      const reader = new FileReader()
+      reader.onload = () => {
+        const base64data = reader.result
+        setImageUri(base64data)
+      }
+
+      reader.readAsDataURL(blob)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      console.log("stopped loading image")
+      setImageLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    setImage()
+  }, [exercise])
+
 
   return (
     <SafeAreaView className="h-full w-full">
+      {/* ======================================= header */}
       <View className={`h-[20%] w-full`}>
-        <ReturnHeader title={"This is the title of the exercise"}/>
+        <ReturnHeader title={"This is the title of the exercise"} />
         <View className="flex-1 items-center justify-around px-10 flex-row">
           <Progress.Bar
             width={isTablet ? 750 : 300}
@@ -34,28 +100,40 @@ const OpenImageGuess = () => {
           <FontAwesome name="heart" size={isTablet ? 60 : 30} color={"red"} />
         </View>
       </View>
+
+      {/* ==================================== image section */}
+
       <View className={`${isTablet ? 'h-[45%] bg-red-200' : 'h-[35%]'} w-full items-center justify-center`}>
-        <Text className={`${isTablet ? 'text-4xl' : 'text-2xl'} mb-3 font-dBold text-center`}>what are you seeing here ?</Text>
-        <Image
-          className={`w-[95%] h-[80%]`}
-          source={images.TestQuestion}
-          resizeMode='contain'
-        />
+        {imageLoading ? (
+          <ActivityIndicator size={"large"} color={"black"} />
+        ) : (
+          <>
+            <Text className={`${isTablet ? 'text-4xl' : 'text-2xl'} mb-3 font-dBold text-center`}>{exercise.aiQuestion}</Text>
+            <Image
+              className={`w-[95%] h-[80%]`}
+              source={{ uri: imageUri }}
+              resizeMode='contain'
+            />
+          </>
+        )}
       </View>
+
+      {/* ==================================== form field and submit button */}
       <View className={`${isTablet ? 'h-[35%]' : 'h-[45%]'} w-full items-center justify-around`}>
         <Input
           labelText={"here is the text of the label"}
           containerStyles={`w-[90%]`}
-          handleChangeText={(text) => setAnswer(text)}
+          handleChangeText={handleAnswerChange}
           inputStyles={`border-[2px] border-regularGray`}
         />
         <PrimaryButton
           containerStyles={`w-[80%]`}
           text={'SUBMIT'}
-          handlePress={() => setShowResult(!showResult)}
+          handlePress={handleSubmit}
+          loading={isCorrecting}
         />
 
-        {/* result section for passed questions */}
+        {/* =================================== result section for passed questions */}
         {(showResult && questionPassed) && (
           <View className={`bg-green-100 justify-between items-center h-full w-full absolute top-0 left-0 ${isTablet ? 'p-5 pl-10' : 'p-3'}`}>
             <View className="w-full items-center flex-row justify-start">
@@ -78,14 +156,14 @@ const OpenImageGuess = () => {
               text={"CONTINUE"}
               handlePress={() => {
                 setShowResult(!showResult)
-                router.push('/congrats')
+                handleCorrectExercise()
               }}
 
             />
           </View>
         )}
 
-        {/* result section for failed questions */}
+        {/* ===================================== result section for failed questions */}
         {(showResult && !questionPassed) && (
           <View className={`bg-red-100 h-full w-full absolute top-0 left-0 ${isTablet ? 'p-5 pl-10' : 'p-3'} items-center justify-around`}>
             <View className="w-full items-center flex-row justify-start">

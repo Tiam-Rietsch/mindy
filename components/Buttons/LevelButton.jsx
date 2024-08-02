@@ -1,15 +1,16 @@
 import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import * as Progress from 'react-native-progress'
 import { FontAwesome6, FontAwesome } from '@expo/vector-icons'
 import PrimaryButton from './PrimaryButton'
 import { DetailContext, useDetailPopupContext } from '../../context/DetailPopupProvider'
 import { router } from 'expo-router'
 import { useGlobalContext } from '../../context/GlobalProvider'
+import { useLessonContext } from '../../context/LessonProvider'
 
-const LevelButton = ({ containerStyles, shift, lesson, current }) => {
+const LevelButton = ({ containerStyles, shift, lesson, current, lessonCount }) => {
 
-  const { isTablet } = useGlobalContext()
+  const { isTablet, setCurLesson, curLesson } = useGlobalContext()
   const { active, passed, progress, rating } = lesson
   const [yOffset, setYOffset] = useState(0)
   const [dimenssions, setDimensions] = useState({
@@ -20,13 +21,27 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
 
   const canShowDetail = () => focusedDetailId == lesson.lessonId
 
-  const showDetail = (event) => {
+  const showDetail = () => {
     setFocusedDetailId(focusedDetailId == -1 ? lesson.lessonId : -1)
   }
 
-  const startLesson = () => {
+  const startLesson = useCallback(() => {
+    setCurLesson(lesson)
     router.push('/lesson')
-  }
+  }, [curLesson])
+
+  // handlers
+  const handlePressIn = useCallback(() => {
+    setYOffset(10)
+  }, [])
+
+  const handlePressOut = useCallback(() => {
+    setYOffset(-10)
+  }, [])
+
+  const handlePress = useCallback(() => {
+    showDetail()
+  }, [focusedDetailId])
 
   return (
     <View
@@ -84,9 +99,9 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         ) : ( 
           `aspect-square bg-regularGray rounded-full border-[3px] border-b-[13px] border-thickGray flex justify-center items-center active:border-b-[3px] active:border-[2px] active:translate-y-[15px] ${containerStyles}`
         )}
-        onPressIn={() => setYOffset(10)}
-        onPressOut={() => setYOffset(-10)}
-        onPress={(event) => showDetail(event)}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={handlePress}
       >
         {current && (
           <View className={`absolute ${isTablet ? 'w-[180px] p-5 rounded-2xl top-[-60px]' : 'w-[100px] p-3 rounded-xl top-[-25px]'}  bg-white z-10 border-regularViolet border-[3px] items-center justify-center`}>
@@ -110,65 +125,11 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
           />
         )}
 
-        {/* {passed && (
-          <View
-            style={{
-              position: 'absolute',
-              bottom: -70,
-              transform: [
-                { translateY: isTablet ? yOffset : yOffset + 10 },
-              ]
-            }}
-            className="w-full h-[80px] flex-row justify-center"
-          >
-            {rating < 1 ? (
-              <FontAwesome6
-                name="star"
-                size={isTablet ? 40 : 25}
-                color={'#777777'}
-              />
-            ) : (
-              <FontAwesome
-                name="star"
-                size={isTablet ? 40 : 25}
-                color={'#e9d30e'}
-              />
-            )}
-            {rating < 2 ? (
-              <FontAwesome6
-                name="star"
-                size={isTablet ? 70 : 45}
-                color={'#777777'}
-              />
-            ) : (
-              <FontAwesome
-                name="star"
-                size={isTablet ? 70 : 45}
-                color={'#e9d30e'}
-              />
-            )}
-            {rating < 3 ? (
-              <FontAwesome6
-                name="star"
-                size={isTablet ? 40 : 25}
-                color={'#777777'}
-              />
-            ) : (
-              <FontAwesome
-                name="star"
-                size={isTablet ? 40 : 25}
-                color={'#e9d30e'}
-              />
-            )}
-          </View>
-        )} */}
-
       </TouchableOpacity>
 
       {canShowDetail() && (
         <View
           style={{
-            // display: 'none',
             position: 'relative',
             transform: [
               { translateX: shift ?? 0 },
@@ -178,8 +139,8 @@ const LevelButton = ({ containerStyles, shift, lesson, current }) => {
         >
           <View className={`absolute top-0 transform ${isTablet ? '-translate-y-[60px]' : '-translate-y-[20px]'} h-0 w-0 border-x-transparent border-t-transparent border-b-lightGray ${isTablet ? 'border-[30px]' : 'border-[10px]'}`}>
           </View>
-          <Text className={`font-dBold ${isTablet ? 'text-3xl' : 'text-[20px]'} text-thickViolet`}>ddddd</Text>
-          <Text className={`font-dBold ${isTablet ? 'text-2xl' : 'text-[16px]'} text-thickViolet`}>lesson d of 5</Text>
+          <Text className={`font-dBold ${isTablet ? 'text-3xl' : 'text-[20px]'} text-thickViolet`}>{lesson.name}</Text>
+          <Text className={`font-dBold ${isTablet ? 'text-2xl' : 'text-[16px]'} text-thickViolet`}>lesson {lesson.lessonId} of {lessonCount}</Text>
           <PrimaryButton
             text="START"
             handlePress={startLesson}

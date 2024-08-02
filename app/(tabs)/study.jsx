@@ -1,12 +1,12 @@
 import { SafeAreaView, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect  } from 'react'
 import SkillCard from '../../components/SkillCard'
 import images from '../../constants/images'
 import TabHeader from '../../components/TabHeader'
 import { useGlobalContext } from '../../context/GlobalProvider'
-import { getCompetences, getChapters, getLoessons } from '../api/fetch'
-import { router } from 'expo-router'
-const skills = [
+import { getCompetences } from '../api/fetch'
+
+const skillsList = [
   {
     skillId: 1,
     name: "VERBAL COMMUNICATION",
@@ -30,40 +30,7 @@ const skills = [
 ]
 
 const study = () => {
-  const { isTablet, setSkills,  selectedSkil, setSelectedSkill, units, setUnits } = useGlobalContext()
-  const [isLoading, setIsLoading] = useState(false)
-
-  const loadUnits = async (id) => {
-    try {
-      setIsLoading(true)
-      let loadedUnits = await getChapters(id)
-      if (!loadedUnits) throw Error("units could not be loaded")
-  
-      let newUnits = await Promise.all([...loadedUnits].map(async(chapter, index) => { 
-        if (index == 0) {
-          let lessons = await getLoessons(chapter.id)
-          return { ...chapter,
-            unitId: index + 1,
-            isCurrent: true,
-            lessons: [...lessons].map((lesson, index) => ({...lesson, lessonId: index+1}))
-          }
-        } else {
-          return { ...chapter, 
-            unitId: index + 1,
-            isCurrent: false,
-            lessons: []
-          }
-        }
-      }))
-
-      setUnits(newUnits)
-    } catch(error) {
-      console.error(error)
-    } finally {
-      setIsLoading(false)
-    }
-
-  }
+  const { isTablet, setSkills, skills, selectedSkil, setSelectedSkill, units, setUnits } = useGlobalContext()
 
   const loadSkills = async () => {
     try {
@@ -77,16 +44,9 @@ const study = () => {
     }
   }
 
-  // useEffect(() => {
-  //   loadSkills()
-  // })
-
-  const goToSkill = async (skill) => {
-    // setSelectedSkill(skill)
-    // await loadUnits(skill.id)
-    router.push('/chaptersMap')
-  }
-
+  useEffect(() => {
+    loadSkills()
+  }, [])
   
 
   return (
@@ -104,11 +64,8 @@ const study = () => {
         {[...skills].map((skill) => (
           <SkillCard
             key={skill.skillId}
-            title={skill.name}
-            description={skill.description}
+            skill={skill}
             src={images.handShake}
-            handleContinue={() => goToSkill(skill)}
-            loading={isLoading}
           />
         ))}
 

@@ -1,16 +1,20 @@
-import { createContext, useContext, useState } from 'react'
+import { useState, createContext, useContext } from 'react'
+
 
 const LessonContext = createContext()
-
 export const useLessonContext = () => useContext(LessonContext)
 
 export default LessonProvider = ({ children }) => {
-  const [curLesson, setCurLesson] = useState(null)
+  const [curExerciseIndex, setCurExerciseIndex] = useState(0)
+  const [exercises, setExercises] = useState([])
+
   return (
     <LessonContext.Provider
       value={{
-        curLesson,
-        setCurLesson
+        curExerciseIndex,
+        setCurExerciseIndex,
+        exercises,
+        setExercises
       }}
     >
       { children }

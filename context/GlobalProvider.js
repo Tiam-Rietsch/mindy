@@ -6,31 +6,33 @@ const GlobalContext = createContext()
 export const useGlobalContext = () => useContext(GlobalContext)
 
 export default GlobalProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
   const [skills, setSkills] = useState([])
-  const [selectedSkill, setSelectedSkill] = useState(null)
+  const [curSkill, setCurSkill] = useState(null)
   const [units, setUnits] = useState(null)
+  const [curUnit, setCurUnit] = useState(null)
   const [allLessons, setAllLessons] = useState([])
+  const [curLesson, setCurLesson] = useState(null)
 
   useEffect(() => {
     // get the auth token
-    // getAuthToken()
-    //   .then((token) => {
-    //     if (token) {
-    //       setIsLoggedIn(true)
-    //     } else {
-    //       setIsLoggedIn(false)
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     setIsLoggedIn(false)
-    //     console.error(error)
-    //   })
+    getAuthToken()
+      .then((token) => {
+        if (token) {
+          setIsLoggedIn(true)
+        } else {
+          setIsLoggedIn(false)
+        }
+      })
+      .catch((error) => {
+        setIsLoggedIn(false)
+        console.error(error)
+      })
     
     // get the device dimensions
     setIsTablet(Dimensions.get('window').width >= 500)
-  }, [isLoggedIn, setIsLoggedIn, isTablet, setIsTablet])
+  }, [])
 
   return (
     <GlobalContext.Provider
@@ -39,12 +41,16 @@ export default GlobalProvider = ({ children }) => {
         isTablet,
         skills,
         setSkills,
-        selectedSkill,
-        setSelectedSkill,
+        curSkill,
+        setCurSkill,
         units, 
         setUnits,
+        curUnit,
+        setCurUnit,
         allLessons,
-        setAllLessons
+        setAllLessons,
+        curLesson,
+        setCurLesson
       }}
     >
       { children }

@@ -5,7 +5,7 @@ import ReturnHeader from '../../components/ReturnHeader'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import { getChapters, getLoessons } from '../api/fetch'
 
-const units = [
+const unitsList = [
   {
     unitId: 1,
     name: "this is the first chapter",
@@ -713,12 +713,12 @@ const units = [
 ]
 
 const chaptersMap = () => {
-  // const { units } = useGlobalContext()
+  const { units, curSkill } = useGlobalContext()
 
   return (
     <SafeAreaView className="w-full h-full flex-col items-center">
       <View className="w-full h-[10%]">
-        <ReturnHeader title={"COMMUNICATION VERBALE"} />
+        <ReturnHeader title={curSkill.name} />
       </View>
       <FlatList
         data={units}

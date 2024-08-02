@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image } from 'react-native'
-import React, { createContext, memo, useState } from 'react'
+import React, { createContext, memo, useCallback, useState } from 'react'
 import PrimaryButton from './Buttons/PrimaryButton'
 import LevelButton from './Buttons/LevelButton'
 import { useLessonContext } from '../context/LessonProvider'
@@ -18,10 +18,10 @@ const UnitHeader = ({ unitId, title, isCurrent, isCompleted }) => {
       <View className={`w-full ${!isTablet ? 'h-[80px] mb-10 mt-10' : 'h-[100px] mb-20'} flex-row justify-center items-center overflow-hidden`}>
         <View className="flex-row jusity-center items-center w-[95%]" style={{ gap: 5 }}>
           <View className="flex-1 border-b-[2px] border-regularGray"></View>
-          <Text className={`font-dBold text-regularViolet text-center ${isTablet ? '' : 'w-[50%] text-[18px]'}`}>{ title }</Text>
+          <Text className={`font-dBold text-regularViolet text-center ${isTablet ? '' : 'w-[50%] text-[18px]'}`}>{title}</Text>
           <View className="flex-1 border-b-[2px] border-regularGray"></View>
         </View>
-      
+
       </View>
     )
   }
@@ -43,7 +43,7 @@ const UnitHeader = ({ unitId, title, isCurrent, isCompleted }) => {
   )
 }
 
-const LessonsContainer = ({ lesson, isCurrent, unitId }) => {
+const LessonsContainer = ({ lesson, isCurrent, unitId, lessonCount }) => {
   const { isTablet } = useGlobalContext()
 
   const shiftRatio = (index, unitId) => {
@@ -68,6 +68,7 @@ const LessonsContainer = ({ lesson, isCurrent, unitId }) => {
         shift={shiftRatio(lesson.lessonId - 1, unitId)}
         lesson={lesson}
         current={lesson.active && isCurrent}
+        lessonCount={lessonCount}
       />
     </DetailPopupProvider>
   )
@@ -78,7 +79,7 @@ const LockedLessonsContainer = ({ unitDescription, unitId }) => {
 
   return (
     <View className="w-full justify-center items-center mb-5">
-      <View 
+      <View
         className={`flex-col items-center justify-start w-[95%] border-regularGray border-[2px] px-5 rounded-xl ${isTablet ? '' : 'py-5'} `}
         style={{ gap: 15 }}
       >
@@ -87,7 +88,7 @@ const LockedLessonsContainer = ({ unitDescription, unitId }) => {
           <FontAwesome name="lock" size={isTablet ? 30 : 20} color={"#777777"} />
           <Text className={`text-thickGray font-dBold ${isTablet ? '' : 'text-[18px]'}`}>Section {unitId}</Text>
         </View>
-        <Text className={`font-dBold text-thickGray text-center ${ isTablet ? '' : 'text-[14px]'}`}>{ unitDescription }</Text>
+        <Text className={`font-dBold text-thickGray text-center ${isTablet ? '' : 'text-[14px]'}`}>{unitDescription}</Text>
         <View className={`border-[1px] border-regularViolet rounded-[8px] items-center justify-center border-b-[5px] ${isTablet ? '' : 'p-4'}`}>
           <Text className={`font-dBold text-regularViolet ${isTablet ? '' : 'text-[16px]'}`}>pass the previous section to unlock</Text>
         </View>
@@ -97,11 +98,28 @@ const LockedLessonsContainer = ({ unitDescription, unitId }) => {
   )
 }
 
+
 const UnitContainer = memo(
   function ({ unit: { unitId, name, description, objective, isCurrent, lessons, isCompleted } }) {
     const { isTablet } = useGlobalContext()
-    console.log('\n\n\n', lessons)
-    console.log(unitId)
+
+    const renderItem = useCallback(({ item }) => (
+      <LessonsContainer
+        lesson={item}
+        isCurrent={isCurrent}
+        unitId={unitId}
+        lessonCount={lessons.length}
+      />
+    ), [])
+
+    const renderEmptyComponent = useCallback(() => (
+      <LockedLessonsContainer
+        unitDescription={description}
+        unitId={unitId}
+      />
+    ), [])
+
+    const petUrl = getPet(unitId - 1)
 
     return (
       <View className="w-full flex items-center">
@@ -116,7 +134,7 @@ const UnitContainer = memo(
             {(isCurrent || isCompleted) && (
               <View className={`${isTablet ? 'h-[400px]' : 'h-[180px]'} aspect-square absolute top-[40%] ${unitId % 2 == 0 ? 'right-[5%]' : 'left-[5%]'}`}>
                 <Image
-                  source={getPet(unitId - 1)}
+                  source={petUrl}
                   className="h-full w-full"
                   resizeMode="contain"
                 />
@@ -128,26 +146,15 @@ const UnitContainer = memo(
               className="w-full"
               data={isCurrent || isCompleted ? lessons : []}
               keyExtractor={(lesson) => lesson.lessonId}
-              renderItem={({ item }) => (
-                <LessonsContainer
-                  lesson={item}
-                  isCurrent={isCurrent}
-                  unitId={unitId}
-                />
-              )}
-              ListEmptyComponent={() => (
-                <LockedLessonsContainer 
-                  unitDescription={description}
-                  unitId={unitId}
-                />
-              )}
+              renderItem={renderItem}
+              ListEmptyComponent={renderEmptyComponent}
             />
           </View>
         </View>
       </View>
     )
-  }, 
-  function(prevProps, nexProps) {
+  },
+  function (preProps, nexProps) {
     return true
   }
 )

@@ -21,7 +21,7 @@ const login = () => {
       setIsLoading(true)
       let token = await signin(loginForm.email, loginForm.password)
       if (!token) throw Error("le token n'existe pas (loginUser)")
-
+      console.log("token is ", token)
       await SecureStore.setItemAsync('authToken', token)
       setIsLoading(false)
 

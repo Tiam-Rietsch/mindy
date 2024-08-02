@@ -1,4 +1,4 @@
-const baseAddress = "http://192.168.124.48:8080"
+const baseAddress = "http://192.168.8.108:8080"
 
 // authentication endpoing
 const authEnpoint = baseAddress + "/mindyback/v1/auth"
@@ -69,6 +69,8 @@ const gameEndpoint = othersBase + "/games"
  *    }
  * }]
  */
+
+export const createGameByLessonId = gameEndpoint + `/createByLeconId`
 export const createScenarioEndpoint = (id) => gameEndpoint + `/scenario/createbylecon/${id}`
 export const createCommunicationEndpoint = (id) => gameEndpoint + `/communication/createbylecon/${id}`
 
@@ -83,7 +85,7 @@ export const createCommunicationEndpoint = (id) => gameEndpoint + `/communicatio
  * }
  * 
  */
-export const correctionEndpoint = (id) => othersBase + `/corrections/corrigegame/${id}`
+export const correctionEndpoint = (id) =>  othersBase + `/corrections/corrigegame/${id}`
 
 // ====================================== images
 const ImageEndpoint = othersBase + "/images"

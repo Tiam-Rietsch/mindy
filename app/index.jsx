@@ -7,10 +7,10 @@ import { useGlobalContext } from '../context/GlobalProvider'
 
 const index = () => {
   
-  const { isLoggedIn } = useGlobalContext()
+  const { isLoggedIn, uiDevel } = useGlobalContext()
 
-  if (isLoggedIn) {
-    return <Redirect href="/login" />
+  if (isLoggedIn || uiDevel) {
+    return <Redirect href="/study" />
   }
 
   return (

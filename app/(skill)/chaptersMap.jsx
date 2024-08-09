@@ -713,7 +713,7 @@ const unitsList = [
 ]
 
 const chaptersMap = () => {
-  const { units, curSkill } = useGlobalContext()
+  const { units, curSkill, uiDevel } = useGlobalContext()
 
   return (
     <SafeAreaView className="w-full h-full flex-col items-center">
@@ -721,7 +721,7 @@ const chaptersMap = () => {
         <ReturnHeader title={curSkill.name} />
       </View>
       <FlatList
-        data={units}
+        data={uiDevel ? unitsList : units}
         keyExtractor={(item) => item.unitId}
         renderItem={({ item }) => (
           <UnitContainer

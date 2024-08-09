@@ -17,6 +17,7 @@ const congrats = () => {
           className={`${!isTablet ? 'w-[95%] h-[50%]' : ''}`}
           resizeMode='contain'
         />
+        
         <Text className={`${isTablet ? 'text-4xl' : 'text-2xl'} font-dBold text-thickViolet`}>Module Complete !</Text>
         <View className="flex-row items-center justify-center" style={{ gap: 20}}>
           <BonusCard 

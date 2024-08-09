@@ -1,16 +1,15 @@
-import { View, Text, TouchableOpacity, Image, SafeAreaView, ActivityIndicator } from 'react-native'
+import { View, Text, Image, SafeAreaView, ActivityIndicator, Keyboard } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react'
 import * as Progress from 'react-native-progress'
-import { FontAwesome, FontAwesome5, FontAwesome6 } from '@expo/vector-icons'
-import images from '../../constants/images'
+import { FontAwesome } from '@expo/vector-icons'
 import Input from '../Input'
-import { router } from 'expo-router'
 import PrimaryButton from '../Buttons/PrimaryButton'
 import ReturnHeader from '../ReturnHeader'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import { fetchImage, getCorrection } from '../../app/api/fetch'
+import { useLessonContext } from '../../context/LessonProvider'
 
-const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
+const OpenImageGuess = ({ handleCorrectExercise, exercise }) => {
 
   const [answer, setAnswer] = useState('')
   const [questionPassed, setQuestionPassed] = useState(true)
@@ -22,9 +21,10 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
   const [isCorrecting, setIsCorrecting] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const { isTablet } = useGlobalContext()
+  const { exercises } = useLessonContext()
   const [imageUri, setImageUri] = useState(null)
   const [imageLoading, setImageLoading] = useState(false)
-
+  const [progress, setProgress] = useState(0)
 
   const handleAnswerChange = (text) => {
     setAnswer(text)
@@ -39,11 +39,7 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
 
       setCorrection({...correction, analysis: loadedCorrection.analysis, response: loadedCorrection.response, correct: loadedCorrection.isCorrect})        
 
-      if (correction.correct) {
-        setQuestionPassed(true)
-      } else {
-        setQuestionPassed(false)
-      }
+      setQuestionPassed(loadedCorrection.isCorrect)
     } catch(error) {
       console.error(error)
     } finally {
@@ -51,8 +47,9 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
     }
   }
 
-  const handleSubmit = useCallback(() => {
-    correctAnswer()
+  const handleSubmit = useCallback(async () => {
+    Keyboard.dismiss()
+    await correctAnswer()
     setShowResult(true)
   })
 
@@ -91,7 +88,7 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
             width={isTablet ? 750 : 300}
             height={isTablet ? 25 : 10}
             strokeCap={'rounded'}
-            progress={0.5}
+            progress={progress}
             borderRadius={50}
             unfilledColor='#CECECE'
             color="#8A46EA"
@@ -103,7 +100,7 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
 
       {/* ==================================== image section */}
 
-      <View className={`${isTablet ? 'h-[45%] bg-red-200' : 'h-[35%]'} w-full items-center justify-center`}>
+      <View className={`${isTablet ? 'h-[45%]' : 'h-[35%]'} w-full items-center justify-center`}>
         {imageLoading ? (
           <ActivityIndicator size={"large"} color={"black"} />
         ) : (
@@ -121,7 +118,8 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
       {/* ==================================== form field and submit button */}
       <View className={`${isTablet ? 'h-[35%]' : 'h-[45%]'} w-full items-center justify-around`}>
         <Input
-          labelText={"here is the text of the label"}
+          value={answer}
+          labelText={"Votre reponse"}
           containerStyles={`w-[90%]`}
           handleChangeText={handleAnswerChange}
           inputStyles={`border-[2px] border-regularGray`}
@@ -142,13 +140,13 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
               </View>
               <Text className={`${isTablet ? 'text-5xl' : 'text-2xl'} font-dBold text-green-600`}>Bien Joue</Text>
             </View>
-            <View className="w-full">
+            <View className="w-full my-3">
               <Text className={`${isTablet ? 'text-4xl' : 'text-xl'} text-green-600 font-dBold`}>Reponse:</Text>
-              <Text className={`${isTablet ? 'text-3xl' : 'text-[16px]'} font-dBold`}>this is the correct response to the answer</Text>
+              <Text className={`${isTablet ? 'text-2xl' : 'text-[14px]'} font-dBold`}>{correction.response}</Text>
             </View>
-            <View className="w-full">
+            <View className="w-full my-3">
               <Text className={`${isTablet ? 'text-4xl' : 'text-xl'} text-green-600 font-dBold`}>Analyse:</Text>
-              <Text className={`${isTablet ? 'text-3xl' : 'text-[16px]'} font-dBold`}>this is the analysis to the answer</Text>
+              <Text className={`${isTablet ? 'text-2xl' : 'text-[14px]'} font-dBold`}>{correction.analysis}</Text>
             </View>
             <PrimaryButton
               containerStyles={`w-[70%] ${!isTablet ? 'h-[50px] rounded-2xl' : ''} border-green-600`}
@@ -156,7 +154,8 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
               text={"CONTINUE"}
               handlePress={() => {
                 setShowResult(!showResult)
-                handleCorrectExercise()
+                handleCorrectExercise(true)
+                setProgress((exercise.exerciseId) / exercises.length)
               }}
 
             />
@@ -172,13 +171,13 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
               </View>
               <Text className={`${isTablet ? 'text-5xl' : 'text-2xl'} font-dBold text-red-600`}>Incorrect</Text>
             </View>
-            <View className="w-full">
+            <View className="w-full my-3">
               <Text className={`${isTablet ? 'text-4xl' : 'text-xl'} text-red-600 font-dBold`}>Reponse:</Text>
-              <Text className={`${isTablet ? 'text-3xl' : 'text-[16px]'} font-dBold`}>this is the correct response to the answer</Text>
+              <Text className={`${isTablet ? 'text-2xl' : 'text-[14px]'} font-dBold`}>{correction.response}</Text>
             </View>
-            <View className="w-full">
+            <View className="w-full my-3">
               <Text className={`${isTablet ? 'text-4xl' : 'text-xl'} text-red-600 font-dBold`}>Analyse:</Text>
-              <Text className={`${isTablet ? 'text-3xl' : 'text-[16px]'} font-dBold`}>this is the analysis to the answer</Text>
+              <Text className={`${isTablet ? 'text-2xl' : 'text-[14px]'} font-dBold`}>{correction.analysis}</Text>
             </View>
             <PrimaryButton
               containerStyles={`w-[70%] ${!isTablet ? 'h-[50px] rounded-2xl' : ''} border-red-600`}
@@ -186,7 +185,8 @@ const OpenImageGuess = ({ lesson, handleCorrectExercise, exercise }) => {
               text={"COMPRIS"}
               handlePress={() => {
                 setShowResult(!showResult)
-                router.push('/congrats')
+                handleCorrectExercise(false)
+                setProgress((exercise.exerciseId) / exercises.length)
               }}
             />
           </View>

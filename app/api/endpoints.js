@@ -1,4 +1,5 @@
-const baseAddress = "http://192.168.8.108:8080"
+// const baseAddress = "http://192.168.17.195:8080"
+const baseAddress = "http://192.168.8.101:8080"
 
 // authentication endpoing
 const authEnpoint = baseAddress + "/mindyback/v1/auth"

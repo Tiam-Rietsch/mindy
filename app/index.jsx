@@ -10,7 +10,7 @@ const index = () => {
   const { isLoggedIn, uiDevel } = useGlobalContext()
 
   if (isLoggedIn || uiDevel) {
-    return <Redirect href="/study" />
+    return <Redirect href="/login" />
   }
 
   return (

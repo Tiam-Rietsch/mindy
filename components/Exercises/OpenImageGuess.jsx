@@ -75,7 +75,7 @@ const OpenImageGuess = ({ handleCorrectExercise, exercise }) => {
 
   useEffect(() => {
     setImage()
-  }, [exercise])
+  }, [])
 
 
   return (

@@ -4,6 +4,7 @@ import OpenImageGuess from '../../components/Exercises/OpenImageGuess'
 import { useLessonContext } from '../../context/LessonProvider'
 import { getGames } from '../api/fetch'
 import { useGlobalContext } from '../../context/GlobalProvider'
+import { Redirect } from 'expo-router'
 
 const lesson = () => {
   const { curExerciseIndex, setCurExerciseIndex, exercises, setExercises } = useLessonContext()
@@ -26,32 +27,24 @@ const lesson = () => {
   }
 
   const correctExercise = (passed) => {
-    console.log("passed is" , passed)
-    if (!passed) {
-      // get the current exercise and change its Id to the last element of the list note that the indexes start from 1
-      let current = exercises[curExerciseIndex]
-      current.exercisId = exercises.length
+    // console.log("passed is" , passed)
+    // if (!passed) {
+    //   // get the current exercise and change its Id to the last element of the list note that the indexes start from 1
+    //   let current = exercises[curExerciseIndex]
+    //   current.exercisId = exercises.length
 
-      // remove the current exercise from the llist
-      let exs = [...exercises].filter((exercise) => {
-        if (exercise.exerciseId != curExerciseIndex) {
-          // shift all the id's of the exercises higher than the current exercise
-          if (exercise.exerciseId > curExerciseIndex) {
-            exercise.exerciseId -= 1
-          }
-          return exercise
-        }
-        console.log("id", exercise.exercisId)
-      })
+    //   // add the failed exercise at the end of the list
+    //   exs = exercises
+    //   exs.push({...current, exerciseId: exercises.length + 1})
+    //   setExercises(exs)
+    // }
 
-      // add the failed exercise at the end of the list
-      exs.push(current)
-      setExercises(exs)
-      console.log(current.exerciseId)
-    } else {
-      // only change if the user has passed the exercise because when he fails we remove the element and shift the list to the left
-      setCurExerciseIndex(curExerciseIndex + 1)
+    if (curExerciseIndex == exercises.length) {
+      setCurExerciseIndex(0)
+      setExercises(null)
+      return <Redirect href='/congrats' />
     }
+    setCurExerciseIndex(curExerciseIndex + 1)
   }
 
   const ready = () => {
